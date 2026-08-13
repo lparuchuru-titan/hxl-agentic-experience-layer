@@ -4,6 +4,16 @@ Public demo of Salesforce [Headless Experience Layer (HXL)](https://www.salesfor
 
 This repo is the companion to the post **[Define the interface once. Render it anywhere.](docs/blog/20260813-headless-experience-layer.html)**.
 
+## Case Next Action
+
+![Case Next Action card](docs/media/case-next-action.png)
+
+<video src="docs/media/case-next-action-demo.mp4" poster="docs/media/case-next-action.png" controls muted loop playsinline width="720"></video>
+
+[Download the demo (MP4)](docs/media/case-next-action-demo.mp4) · animated preview:
+
+![Demo: Mosaic JSON becoming the Case Next Action widget](docs/media/case-next-action-demo.gif)
+
 ## What is in here
 
 | Path | What it is |
@@ -12,7 +22,9 @@ This repo is the companion to the post **[Define the interface once. Render it a
 | `mosaics/hello-world.json` | Minimal `tile/text` widget from the playground Hello World tutorial |
 | `force-app/main/default/uiWidgets/caseNextAction/` | Salesforce WidgetBundle (`lightning__agentforceWidget` + schema + meta) |
 | `preview/index.html` | Local semantic preview (intent, not pixels) |
+| `preview/demo.html` | Timed walkthrough used for the README recording |
 | `docs/blog/` | Public blog post |
+| `docs/media/` | Screenshot, GIF, and MP4 of the widget |
 
 The playground itself is built the same way the tutorials teach: **each tutorial is a widget**. Expand the code view on any lesson to see the Mosaic tree.
 

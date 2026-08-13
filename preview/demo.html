@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case Next Action demo</title>
+  <style>
+    :root {
+      --ink: #1c1917; --muted: #78716c; --line: #e7e5e4;
+      --paper: #f7f3eb; --card: #fffdf8; --warn: #b45309; --warn-bg: #fff8e8;
+      --navy: #1A1A2E; --teal: #0E7C86;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(91,141,239,.10), transparent 45%),
+        radial-gradient(ellipse at 90% 10%, rgba(14,124,134,.10), transparent 40%),
+        var(--paper);
+      color: var(--ink);
+      font: 16px/1.55 "Segoe UI", system-ui, sans-serif;
+      overflow: hidden;
+    }
+    .frame {
+      width: 1280px; height: 720px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: 28px 40px 36px;
+    }
+    header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .eyebrow {
+      font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); font-weight: 700;
+    }
+    header h1 { margin: 4px 0 0; font-size: 1.45rem; }
+    .host {
+      font-size: 12px; font-weight: 700; padding: 6px 10px; border-radius: 999px;
+      background: #e6f5f6; color: #0a3f44; border: 1px solid #9fd4d8;
+    }
+    .stage { position: relative; }
+    .scene {
+      position: absolute; inset: 0;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .45s ease, transform .45s ease;
+      pointer-events: none;
+    }
+    .scene.on { opacity: 1; transform: none; pointer-events: auto; }
+    .split { display: grid; grid-template-columns: 1fr 520px; gap: 28px; height: 100%; align-items: start; }
+    pre {
+      margin: 0; background: #1A1A2E; color: #e7e5e4;
+      border-radius: 14px; padding: 18px 20px;
+      font: 13px/1.55 ui-monospace, Menlo, monospace;
+      height: 100%; overflow: hidden;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 12px 32px rgba(28,25,23,.08);
+    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .badges { display: flex; gap: 6px; }
+    .badge {
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: #efece4; color: #44403c;
+    }
+    .badge.warn { background: #fde68a; color: #78350f; }
+    .subject { font-size: 1.2rem; font-weight: 700; margin: 12px 0 4px; }
+    .caption { font-size: 13px; color: var(--muted); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+    .callout {
+      border-left: 4px solid var(--warn); background: var(--warn-bg);
+      padding: 10px 12px; border-radius: 0 10px 10px 0; margin: 10px 0 14px;
+    }
+    .callout.pulse { box-shadow: 0 0 0 4px rgba(232,163,23,.25); }
+    .callout strong { display: block; margin-bottom: 2px; }
+    .actions { display: flex; gap: 8px; margin: 14px 0 10px; }
+    button {
+      border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 650; cursor: pointer;
+    }
+    .primary { background: var(--navy); color: #fff; }
+    .primary.hot { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26,26,46,.28); }
+    .secondary { background: #e7e5e4; color: var(--ink); }
+    h3 { margin: 12px 0 6px; font-size: 15px; }
+    p { margin: 6px 0; }
+    .intro {
+      display: grid; place-items: center; height: 100%; text-align: center;
+    }
+    .intro h2 { font-size: 2.1rem; margin: 0 0 10px; }
+    .intro p { color: var(--muted); font-size: 1.05rem; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <header>
+      <div>
+        <div class="eyebrow">Headless Experience Layer</div>
+        <h1>Case Next Action</h1>
+      </div>
+      <span class="host" id="hostLabel">Mosaic JSON</span>
+    </header>
+    <div class="stage">
+      <section class="scene on" id="intro">
+        <div class="intro">
+          <div>
+            <h2>Define the interface once.</h2>
+            <p>One widget. Slack, ChatGPT, Claude, Agentforce, or any MCP host.</p>
+          </div>
+        </div>
+      </section>
+      <section class="scene" id="split">
+        <div class="split">
+          <pre id="jsonPane"></pre>
+          <div class="card" id="widgetCard">
+            <div class="row">
+              <div class="caption">00001234</div>
+              <div class="badges">
+                <span class="badge">High</span>
+                <span class="badge warn">SLA</span>
+              </div>
+            </div>
+            <div class="subject">Payment failed on renewal invoice</div>
+            <div class="caption">Northwind Traders</div>
+            <hr>
+            <div class="callout" id="sla">
+              <strong>SLA at risk</strong>
+              <p>2.5 hours remaining</p>
+            </div>
+            <h3>Recommended next action</h3>
+            <p>Confirm the card on file, then send the retry link and stay on the case until the payment posts.</p>
+            <div class="actions">
+              <button class="primary" id="primaryBtn" type="button">Take next action</button>
+              <button class="secondary" type="button">View case</button>
+            </div>
+            <div class="caption">Alex Rivera</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script>
+    const json = `{
+  "definition": "tile/card",
+  "attributes": { "variant": "elevated" },
+  "children": [
+    { "definition": "tile/badge", "attributes": { "label": "High" } },
+    { "definition": "tile/text",
+      "attributes": { "text": "{!$case.subject}", "variant": "h2" } },
+    { "definition": "tile/callout",
+      "meta": { "if": "{!$case.slaAtRisk}" },
+      "attributes": { "variant": "warning", "title": "SLA at risk" } },
+    { "definition": "tile/button",
+      "attributes": { "label": "Take next action", "variant": "primary" } }
+  ]
+}`;
+    document.getElementById('jsonPane').textContent = json;
+
+    const intro = document.getElementById('intro');
+    const split = document.getElementById('split');
+    const host = document.getElementById('hostLabel');
+    const sla = document.getElementById('sla');
+    const btn = document.getElementById('primaryBtn');
+
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      await wait(1600);
+      intro.classList.remove('on');
+      split.classList.add('on');
+      host.textContent = 'Mosaic → widget';
+      await wait(2200);
+      sla.classList.add('pulse');
+      host.textContent = 'SLA gated by meta.if';
+      await wait(1800);
+      btn.classList.add('hot');
+      host.textContent = 'One primary action';
+      await wait(2200);
+      host.textContent = 'Ready for Slack / Claude / Agentforce';
+    })();
+  </script>
+</body>
+</html>

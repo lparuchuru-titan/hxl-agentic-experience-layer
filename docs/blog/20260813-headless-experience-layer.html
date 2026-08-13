@@ -205,6 +205,28 @@ window.addEventListener('DOMContentLoaded', function () {
     margin: 18px 0;
     box-shadow: var(--shadow);
   }
+  figure.shot {
+    margin: 18px 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 12px 10px;
+    box-shadow: var(--shadow);
+  }
+  figure.shot img, figure.shot video {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: var(--paper);
+  }
+  figure.shot figcaption {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+  }
   footer {
     margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line);
     font-size: 13px; color: var(--muted);
@@ -219,6 +241,7 @@ window.addEventListener('DOMContentLoaded', function () {
   <a href="#playground">How the playground is built</a>
   <a href="#mosaic">Mosaic JSON</a>
   <a href="#widget">One component</a>
+  <a href="#demo">Screenshot and demo</a>
   <a href="#trust">Trust travels with it</a>
   <a href="#try">Try it</a>
 </nav>
@@ -299,6 +322,16 @@ flowchart LR
 
   <h2 id="widget">One component: Case Next Action</h2>
   <p class="story">The playground already ships agent-action mosaics in this shape — case summary, SLA status, similar cases, rebooking options. The sample in this repo is the one agents actually need on a busy queue: <strong>what is the case, is the SLA burning, what should I do next</strong>.</p>
+  <h3 id="demo">Screenshot and demo</h3>
+  <figure class="shot">
+    <img src="../media/case-next-action.png" alt="Case Next Action card showing a high-priority SLA-at-risk case for Northwind Traders, with a recommended next action and Take next action button">
+    <figcaption>Case Next Action — semantic preview of the Mosaic widget (sample data is fictional).</figcaption>
+  </figure>
+  <figure class="shot">
+    <video src="../media/case-next-action-demo.mp4" poster="../media/case-next-action.png" controls muted loop playsinline></video>
+    <figcaption>Ten-second walkthrough: Mosaic JSON on the left, the same widget on the right, SLA gated by <code>meta.if</code>.</figcaption>
+  </figure>
+
   <p>The card is one <code>tile/card</code>. A row of badges for priority and SLA. A warning <code>tile/callout</code> gated by <code>meta.if</code> on <code>slaAtRisk</code>. One primary button. Semantic variants only — no hex colors, no pixel widths.</p>
 <pre class="code">{
   "definition": "tile/callout",

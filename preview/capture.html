@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case Next Action</title>
+  <style>
+    :root {
+      --ink: #1c1917; --muted: #78716c; --line: #e7e5e4;
+      --paper: #f7f3eb; --card: #fffdf8; --warn: #b45309; --warn-bg: #fff8e8;
+      --navy: #1A1A2E;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--paper); }
+    body {
+      color: var(--ink);
+      font: 16px/1.55 "Segoe UI", system-ui, sans-serif;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 40px 24px;
+    }
+    .stage { width: 520px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 12px 32px rgba(28,25,23,.08);
+    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .badges { display: flex; gap: 6px; }
+    .badge {
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: #efece4; color: #44403c;
+    }
+    .badge.warn { background: #fde68a; color: #78350f; }
+    .subject { font-size: 1.2rem; font-weight: 700; margin: 12px 0 4px; }
+    .caption { font-size: 13px; color: var(--muted); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+    .callout {
+      border-left: 4px solid var(--warn); background: var(--warn-bg);
+      padding: 10px 12px; border-radius: 0 10px 10px 0; margin: 10px 0 14px;
+    }
+    .callout strong { display: block; margin-bottom: 2px; }
+    .actions { display: flex; gap: 8px; margin: 14px 0 10px; }
+    button {
+      border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 650; cursor: pointer;
+    }
+    .primary { background: var(--navy); color: #fff; }
+    .secondary { background: #e7e5e4; color: var(--ink); }
+    h3 { margin: 12px 0 6px; font-size: 15px; }
+    p { margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <div class="stage" id="card-root">
+    <div class="card">
+      <div class="row">
+        <div class="caption">00001234</div>
+        <div class="badges">
+          <span class="badge">High</span>
+          <span class="badge warn">SLA</span>
+        </div>
+      </div>
+      <div class="subject">Payment failed on renewal invoice</div>
+      <div class="caption">Northwind Traders</div>
+      <hr>
+      <div class="callout">
+        <strong>SLA at risk</strong>
+        <p>2.5 hours remaining</p>
+      </div>
+      <h3>Recommended next action</h3>
+      <p>Confirm the card on file, then send the retry link and stay on the case until the payment posts.</p>
+      <div class="actions">
+        <button class="primary" type="button">Take next action</button>
+        <button class="secondary" type="button">View case</button>
+      </div>
+      <div class="caption">Alex Rivera</div>
+    </div>
+  </div>
+</body>
+</html>
