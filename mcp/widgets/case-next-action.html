@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case Next Action</title>
+  <style>
+    :root {
+      --ink: #1c1917; --muted: #78716c; --line: #e7e5e4;
+      --paper: #f7f3eb; --card: #fffdf8; --warn: #b45309; --warn-bg: #fff8e8;
+      --navy: #1A1A2E;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: transparent; }
+    body {
+      color: var(--ink);
+      font: 15px/1.5 "Segoe UI", system-ui, sans-serif;
+      padding: 8px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .badges { display: flex; gap: 6px; }
+    .badge {
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: #efece4; color: #44403c;
+    }
+    .badge.warn { background: #fde68a; color: #78350f; }
+    .subject { font-size: 1.15rem; font-weight: 700; margin: 10px 0 4px; }
+    .caption { font-size: 13px; color: var(--muted); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 12px 0; }
+    .callout {
+      border-left: 4px solid var(--warn); background: var(--warn-bg);
+      padding: 10px 12px; border-radius: 0 10px 10px 0; margin: 10px 0 12px;
+    }
+    .callout strong { display: block; margin-bottom: 2px; }
+    .actions { display: flex; gap: 8px; margin: 12px 0 8px; }
+    button {
+      border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 650; cursor: pointer;
+    }
+    .primary { background: var(--navy); color: #fff; }
+    .secondary { background: #e7e5e4; color: var(--ink); }
+    h3 { margin: 10px 0 6px; font-size: 14px; }
+    p { margin: 6px 0; }
+    .empty { color: var(--muted); padding: 18px; }
+  </style>
+</head>
+<body>
+  <div id="root" class="empty">Waiting for case data…</div>
+  <script type="module">
+    /*__EXT_APPS_BUNDLE__*/
+    const SAMPLE = {
+      caseNumber: "00001234",
+      subject: "Payment failed on renewal invoice",
+      priority: "High",
+      slaHoursLeft: 2.5,
+      slaAtRisk: true,
+      customerName: "Northwind Traders",
+      recommendedAction: "Confirm the card on file, then send the retry link and stay on the case until the payment posts.",
+      ownerName: "Alex Rivera"
+    };
+
+    function render(data) {
+      const sla = data.slaAtRisk
+        ? `<div class="callout"><strong>SLA at risk</strong><p>${data.slaHoursLeft} hours remaining</p></div>`
+        : "";
+      document.getElementById("root").outerHTML = `
+        <div class="card" id="root">
+          <div class="row">
+            <div class="caption">${data.caseNumber || ""}</div>
+            <div class="badges">
+              <span class="badge">${data.priority || ""}</span>
+              ${data.slaAtRisk ? '<span class="badge warn">SLA</span>' : ""}
+            </div>
+          </div>
+          <div class="subject">${data.subject || ""}</div>
+          <div class="caption">${data.customerName || ""}</div>
+          <hr>
+          ${sla}
+          <h3>Recommended next action</h3>
+          <p>${data.recommendedAction || ""}</p>
+          <div class="actions">
+            <button class="primary" id="act" type="button">Take next action</button>
+            <button class="secondary" id="view" type="button">View case</button>
+          </div>
+          <div class="caption">${data.ownerName || ""}</div>
+        </div>`;
+      const send = (text) => {
+        if (globalThis.__hxlSend) globalThis.__hxlSend(text);
+      };
+      document.getElementById("act")?.addEventListener("click", () => {
+        send(`Take next action on case ${data.caseNumber}: ${data.recommendedAction}`);
+      });
+      document.getElementById("view")?.addEventListener("click", () => {
+        send(`View case ${data.caseNumber} for ${data.customerName}`);
+      });
+    }
+
+    function parseToolResult(result) {
+      const text = result?.content?.[0]?.text;
+      if (!text) return SAMPLE;
+      try { return JSON.parse(text); } catch { return SAMPLE; }
+    }
+
+    if (globalThis.ExtApps?.App) {
+      const { App } = globalThis.ExtApps;
+      const app = new App({ name: "CaseNextAction", version: "1.0.0" }, {}, { autoResize: true });
+      globalThis.__hxlSend = (text) => {
+        app.sendMessage({ role: "user", content: [{ type: "text", text }] });
+      };
+      app.ontoolresult = (result) => render(parseToolResult(result));
+      await app.connect();
+    } else {
+      const q = new URLSearchParams(location.search).get("payload");
+      render(q ? JSON.parse(q) : SAMPLE);
+    }
+  </script>
+</body>
+</html>

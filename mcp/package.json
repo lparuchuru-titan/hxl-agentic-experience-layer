@@ -1,0 +1,19 @@
+{
+  "name": "hxl-case-next-action-mcp",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP app that renders the HXL Case Next Action widget in Claude",
+  "bin": {
+    "hxl-case-next-action-mcp": "./server.mjs"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "http": "node server.mjs --http"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "express": "^5.1.0",
+    "zod": "^3.24.2"
+  }
+}

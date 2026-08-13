@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "hxl-case-next-action": {
+      "command": "node",
+      "args": ["mcp/server.mjs"]
+    }
+  }
+}

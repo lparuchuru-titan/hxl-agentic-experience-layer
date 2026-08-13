@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 node_modules/
+mcp/node_modules/
 .sf/
 .sfdx/
 .localdevserver/

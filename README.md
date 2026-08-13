@@ -24,7 +24,7 @@ This repo is the companion to the post **[Define the interface once. Render it a
 | `preview/index.html` | Local semantic preview (intent, not pixels) |
 | `preview/demo.html` | Timed walkthrough used for the README recording |
 | `docs/blog/` | Public blog post |
-| `docs/media/` | Screenshot, GIF, and MP4 of the widget |
+| `mcp/` | MCP app so Claude can call `get_case_next_action` and render the card |
 
 The playground itself is built the same way the tutorials teach: **each tutorial is a widget**. Expand the code view on any lesson to see the Mosaic tree.
 
@@ -48,6 +48,28 @@ python3 scripts/validate-widget.py
 ```
 
 Claude Code reviewed the Mosaic and WidgetBundle (13 August 2026): all six authoring checks passed (envelope, bindings, semantic variants, one primary button, boolean `meta.if`, usefulness as a next-action card). Buttons are still presentational — hosts must wire the primary action.
+
+## Claude demo
+
+This repo ships an MCP app that Claude can call. It is already registered on this machine as **`hxl-case-next-action`**.
+
+**Claude Code** (user scope):
+
+```bash
+# already added:
+# claude mcp add --scope user hxl-case-next-action -- node mcp/server.mjs
+
+claude -p "Show me the Case Next Action card"
+```
+
+**Claude Desktop:** the same stdio server is in `claude_desktop_config.json`. Fully quit Claude (⌘Q) and reopen, then in a new chat: `Show me the Case Next Action card`.
+
+**Local widget preview:**
+
+```bash
+node mcp/server.mjs --http
+# http://127.0.0.1:8787/widget-preview
+```
 
 ## Two JSON shapes, one idea
 
