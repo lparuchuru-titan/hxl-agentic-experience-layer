@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import express from "express";
+import {
+  registerAppTool,
+  registerAppResource,
+  RESOURCE_MIME_TYPE
+} from "@modelcontextprotocol/ext-apps/server";
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
+const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WIDGET_URI = "ui://widgets/case-next-action.html";
-const MIME = "text/html;profile=mcp-app";
 const SAMPLE = {
   caseNumber: "00001234",
   subject: "Payment failed on renewal invoice",
@@ -23,31 +27,65 @@ const SAMPLE = {
   ownerName: "Alex Rivera"
 };
 
+const bundle = readFileSync(
+  require.resolve("@modelcontextprotocol/ext-apps/app-with-deps"),
+  "utf8"
+).replace(/export\{([^}]+)\};?\s*$/, (_, body) =>
+  "globalThis.ExtApps={" +
+    body
+      .split(",")
+      .map((pair) => {
+        const [local, exported] = pair.split(" as ").map((s) => s.trim());
+        return `${exported ?? local}:${local}`;
+      })
+      .join(",") +
+    "};"
+);
+
 const widgetHtml = readFileSync(
   path.join(__dirname, "widgets", "case-next-action.html"),
   "utf8"
-);
+).replace("/*__EXT_APPS_BUNDLE__*/", () => bundle);
 
 function createServer() {
-  const server = new McpServer({
-    name: "hxl-case-next-action",
-    version: "1.0.0"
-  });
+  const server = new McpServer(
+    { name: "hxl-case-next-action", version: "1.0.0" },
+    {
+      capabilities: {
+        tools: {},
+        resources: {},
+        extensions: {
+          "io.modelcontextprotocol/ui": {
+            mimeTypes: [RESOURCE_MIME_TYPE]
+          }
+        }
+      }
+    }
+  );
 
-  server.registerResource(
-    "case-next-action-widget",
+  registerAppResource(
+    server,
+    "Case Next Action",
     WIDGET_URI,
     {
       title: "Case Next Action",
       description: "HXL Case Next Action card",
-      mimeType: MIME
+      mimeType: RESOURCE_MIME_TYPE
     },
     async () => ({
-      contents: [{ uri: WIDGET_URI, mimeType: MIME, text: widgetHtml }]
+      contents: [
+        {
+          uri: WIDGET_URI,
+          mimeType: RESOURCE_MIME_TYPE,
+          text: widgetHtml,
+          _meta: { ui: { prefersBorder: false } }
+        }
+      ]
     })
   );
 
-  server.registerTool(
+  registerAppTool(
+    server,
     "get_case_next_action",
     {
       title: "Case Next Action",
@@ -60,27 +98,18 @@ function createServer() {
           .describe("Optional case number. Defaults to the sample at-risk renewal case.")
       },
       annotations: { readOnlyHint: true, title: "Case Next Action" },
-      _meta: { ui: { resourceUri: WIDGET_URI } }
+      _meta: {
+        ui: { resourceUri: WIDGET_URI },
+        "ui/resourceUri": WIDGET_URI
+      }
     },
     async ({ caseNumber }) => {
       const payload = {
         ...SAMPLE,
         caseNumber: caseNumber?.trim() || SAMPLE.caseNumber
       };
-      const summary = [
-        `Case ${payload.caseNumber} — ${payload.subject}`,
-        `Customer: ${payload.customerName} · Priority: ${payload.priority} · Owner: ${payload.ownerName}`,
-        payload.slaAtRisk
-          ? `SLA at risk: ${payload.slaHoursLeft} hours remaining`
-          : `SLA: ${payload.slaHoursLeft} hours remaining`,
-        `Recommended next action: ${payload.recommendedAction}`
-      ].join("\n");
       return {
-        content: [
-          { type: "text", text: JSON.stringify(payload) },
-          { type: "text", text: summary }
-        ],
-        _meta: { ui: { resourceUri: WIDGET_URI } }
+        content: [{ type: "text", text: JSON.stringify(payload) }]
       };
     }
   );
@@ -88,37 +117,5 @@ function createServer() {
   return server;
 }
 
-async function startStdio() {
-  const server = createServer();
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-}
-
-async function startHttp() {
-  const app = express();
-  app.use(express.json());
-  app.get("/health", (_req, res) => res.json({ ok: true, widget: WIDGET_URI }));
-  app.get("/widget-preview", (_req, res) => {
-    res.type("html").send(widgetHtml);
-  });
-  app.post("/mcp", async (req, res) => {
-    const server = createServer();
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined
-    });
-    res.on("close", () => transport.close());
-    await server.connect(transport);
-    await transport.handleRequest(req, res, req.body);
-  });
-  const port = Number(process.env.PORT || 8787);
-  app.listen(port, "127.0.0.1", () => {
-    console.error(`HXL Case Next Action MCP on http://127.0.0.1:${port}/mcp`);
-    console.error(`Widget preview: http://127.0.0.1:${port}/widget-preview`);
-  });
-}
-
-if (process.argv.includes("--http")) {
-  await startHttp();
-} else {
-  await startStdio();
-}
+const transport = new StdioServerTransport();
+await createServer().connect(transport);
