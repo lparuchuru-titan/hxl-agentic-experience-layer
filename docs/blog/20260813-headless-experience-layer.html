@@ -313,11 +313,13 @@ window.addEventListener('DOMContentLoaded', function () {
   <div class="flow-board">
     <div class="mermaid">
 flowchart LR
-  A[One Mosaic<br/>in Salesforce] --> B[Agentforce]
-  A --> C[Slack]
-  A --> D[Claude / ChatGPT]
-  A --> E[Mobile / Teams]
+  J[Mosaic JSON<br/>one widget] --> P[Preview in<br/>HXL Playground]
+  P --> S[Slack]
+  P --> A[Agentforce]
+  P --> C[Claude / ChatGPT]
+  P --> M[Mobile / Teams]
     </div>
+    <p style="margin:12px 0 0;font-size:13px;color:var(--muted);text-align:center">Write the JSON once. Confirm it in the playground. Each host deploys its own native view.</p>
   </div>
   <div class="card">
     <strong>What that means on a real team</strong>
