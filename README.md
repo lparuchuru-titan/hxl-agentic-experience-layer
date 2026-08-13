@@ -61,8 +61,6 @@ Claude Code reviewed the Mosaic and WidgetBundle (13 August 2026): all six autho
 
 ## Claude demo
 
-Full click-path (config JSON, � demo
-
 Full click-path (config JSON, ⌘Q, Search and tools, the prompt) is in the [blog’s deploy section](docs/blog/20260813-headless-experience-layer.html#deploy).
 
 **What git recorded**
