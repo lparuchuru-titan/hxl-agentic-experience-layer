@@ -15,7 +15,7 @@ Sample data is fictional (Northwind Traders, case `00001234`). Nothing here is f
 | Term | Meaning |
 |---|---|
 | **HXL** | Salesforce product: describe a UI once; Slack, ChatGPT, Claude, Agentforce, or any MCP host paints it. |
-| **Playground** | Live editor at [Explore the Playground](https://axl-playground-tdx-f802f74fb389.herokuapp.com/). Tutorials on that site are themselves widgets. |
+| **Playground** | Live editor at [Explore the Playground](https://www.headlessexperiencelayer.com/playground/). Tutorials on that site are themselves widgets. |
 | **Component** | A primitive: `tile/text`, `tile/badge`, `tile/button`, `tile/card`. |
 | **Widget** | Those primitives composed into one page (our card). |
 | **Mosaic** | The playground JSON (`type: mosaic`, bindings `{!$case.field}`). |
@@ -41,7 +41,7 @@ You do not pick hex colors in HXL. You pick **semantic variants** (`primary`, `w
 
 ## Step 1 — Develop the HXL component
 
-1. Open the [HXL Playground](https://axl-playground-tdx-f802f74fb389.herokuapp.com/).
+1. Open the [HXL Playground](https://www.headlessexperiencelayer.com/playground/).
 2. Start from a tutorial (each lesson is a widget) or a blank mosaic.
 3. Build a tree of tiles. Ours is: `tile/column` → `tile/card` → header row, subject, customer, optional SLA callout, recommended action, two buttons.
 4. Bind data with `{!$case.field}` and an inline `dataProviders` block. Example from `mosaics/case-next-action.json`:
