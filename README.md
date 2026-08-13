@@ -14,6 +14,16 @@ This repo is the companion to the post **[Define the interface once. Render it a
 
 ![Demo: Mosaic JSON becoming the Case Next Action widget](docs/media/case-next-action-demo.gif)
 
+## In Claude chat
+
+The same widget rendered inside Claude Desktop after `get_case_next_action`. Account name and company branding in the sidebar are blurred.
+
+![Case Next Action in Claude chat](docs/media/claude-chat-case-next-action.png)
+
+<video src="docs/media/claude-chat-demo.mp4" poster="docs/media/claude-chat-case-next-action.png" controls muted loop playsinline width="720"></video>
+
+[Download the Claude chat demo (MP4)](docs/media/claude-chat-demo.mp4)
+
 ## What is in here
 
 | Path | What it is |
