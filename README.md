@@ -2,7 +2,7 @@
 
 This repo is a public sample of Salesforce [Headless Experience Layer (HXL)](https://www.salesforce.com/headless/agentic-experience-layer/).
 
-If those words are new, read this page as a tutorial. The [blog post](docs/blog/20260813-headless-experience-layer.html) starts from the HXL Playground (shown at TDX in April, on the record for builders in July 2026) and how we learned it by building Case Next Action. This README is the file-by-file recipe.
+If those words are new, read this page as a tutorial. The [blog post](docs/blog/20260813-headless-experience-layer.html) starts from HXL beta (end of July 2026; org access early August; GA planned for Dreamforce) and how we learned it in the playground by building Case Next Action. This README is the file-by-file recipe.
 
 **In one sentence:** we described a case card once as Mosaic JSON, then let Claude Desktop render it by calling a local tool.
 
