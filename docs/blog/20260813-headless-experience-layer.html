@@ -222,6 +222,19 @@ window.addEventListener('DOMContentLoaded', function () {
     background: var(--paper);
   }
   figure.shot.wide img, figure.shot.wide video { max-width: 100%; }
+  .yt {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #1A1A2E;
+  }
+  .yt iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; border: 0;
+  }
   figure.shot figcaption {
     font-size: 13px;
     color: var(--muted);
@@ -273,6 +286,7 @@ window.addEventListener('DOMContentLoaded', function () {
 <nav class="sticky-toc">
   <div class="toc-title">On this page</div>
   <a href="#playground">When the playground landed</a>
+  <a href="#tour">Kate’s official tour</a>
   <a href="#meant">How HXL is meant to be used</a>
   <a href="#learn">How we learned it</a>
   <a href="#sample">The Case Next Action sample</a>
@@ -296,7 +310,18 @@ window.addEventListener('DOMContentLoaded', function () {
     Salesforce’s partner First Call Deck lists Headless Experience Layer as <strong>GA July ’26</strong> and notes the product site “includes [an] interactive playground.” On <strong>23 July 2026</strong>, Salesforce Admins published the first dated walkthrough: Kate Lessard’s <a href="https://admin.salesforce.com/blog/2026/tour-hxl-playground-kate-clicks-through-it">Tour HXL Playground</a>. Five days later, <strong>28 July 2026</strong>, True to the Core ran a Deep Dive on Multi-Framework and HXL. That is the window we treat as “the playground is out.”
   </div>
   <p>April is the preview, not the builder launch. On <strong>15 April 2026</strong> at TrailblazerDX, the keynote walked through an Experience Layer playground — components on the left, one JSON structure on the right. The public URL still carries that show in its name: <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">axl-playground-tdx-…</a>, linked from <a href="https://www.salesforce.com/headless/agentic-experience-layer/">Explore the Playground</a>. A May developer post already pointed people at that runtime. Google’s “early August / 4–5 August” blurb is an AI overview, not a Salesforce page. We could not find a primary source for those two days.</p>
-  <p>The playground itself is a live Mosaic runtime. Every tutorial is a widget. Expand the code view and you are reading the same JSON Slack, ChatGPT, Claude, or Agentforce will render. We sat down there in August and built one card.</p>
+  <p>The playground itself is a live Mosaic runtime. Every tutorial is a widget. Expand the code view and you are reading the same JSON Slack, ChatGPT, Claude, or Agentforce will render.</p>
+
+  <h2 id="tour">What the official tour actually clicks through</h2>
+  <p class="story">On 23 July, Lead Admin Evangelist Kate Lessard did not write another Headless 360 explainer. She sat in the playground and clicked. The post is <a href="https://admin.salesforce.com/blog/2026/tour-hxl-playground-kate-clicks-through-it">Tour HXL Playground | Kate Clicks Through It</a> — under ten minutes, made so you follow along. That is the first dated Salesforce Admins walkthrough of the surface we used.</p>
+  <figure class="shot wide">
+    <div class="yt">
+      <iframe src="https://www.youtube.com/embed/FxeiOs8YDSo" title="Tour HXL Playground | Kate Clicks Through It" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <figcaption>Official tour, 23 July 2026. Customize widgets, explore components, start your own. From the <a href="https://www.youtube.com/playlist?list=PLrC_ei2_Pv0GlwxOqMYtNhInzBEQrGv2q">Kate Clicks Through It</a> series.</figcaption>
+  </figure>
+  <p>Kate’s framing is the one we followed. You already know how to shape data and decide what a user should see. HXL is that same judgment, unlocked for agents and surfaces that are not Lightning. The future she names is not another record page. It is deciding how an agent surfaces data, how the information is displayed, and how that work shows up wherever the user already is — Agentforce, Slackbot, ChatGPT, Claude.</p>
+  <p>In the playground that looks like three moves: browse the component catalog, open a pre-built widget and flip host previews, then expand the code view and steal the Mosaic. We did the third move for a case a queue would recognize. Case Next Action is our homework after her tour.</p>
   <div class="card">
     <strong>Words you will hit in the playground</strong>
     <table>
@@ -330,7 +355,7 @@ flowchart LR
   <p>That is the intended loop. The rest of this post is how we learned that loop by building one card.</p>
 
   <h2 id="learn">How we learned it: Case Next Action</h2>
-  <p class="story">We did not start with a platform essay. We started with a case a queue would recognize. Payment failed on a renewal. SLA has two and a half hours left. The agent — human or otherwise — needs the number, the customer, the burn, and the next move. The playground already had cousins of this (case summary, SLA status). We wanted the one you act on.</p>
+  <p class="story">We did not start with a platform essay. We started where Kate left the cursor: in the playground, with a case a queue would recognize. Payment failed on a renewal. SLA has two and a half hours left. The agent — human or otherwise — needs the number, the customer, the burn, and the next move. The playground already had cousins of this (case summary, SLA status). We wanted the one you act on.</p>
   <p>So we built <strong>Case Next Action</strong>: a mosaic with a card, priority and SLA badges, a warning callout that only exists when the case is at risk, a recommended next step, and one primary button. Sample data is fictional — Northwind Traders, case 00001234, owner Alex Rivera.</p>
 <pre class="code">{
   "definition": "tile/callout",
