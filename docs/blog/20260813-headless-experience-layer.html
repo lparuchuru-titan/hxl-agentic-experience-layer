@@ -338,14 +338,15 @@ flowchart LR
 
   <h2 id="learn">How we learned it: Case Next Action</h2>
   <p class="story">We started in the playground with a case a queue would recognize. Payment failed on a renewal. SLA has two and a half hours left. The agent — human or otherwise — needs the number, the customer, the burn, and the next move. The playground already had cousins of this (case summary, SLA status). We wanted the one you act on.</p>
-  <p>So we built <strong>Case Next Action</strong>: a mosaic with a card, priority and SLA badges, a warning callout that only exists when the case is at risk, a recommended next step, and one primary button. Sample data is fictional — Northwind Traders, case 00001234, owner Alex Rivera.</p>
+  <p>So we built <strong>Case Next Action</strong>: a mosaic with a card, priority and SLA badges, a warning callout that only exists when the case is at risk, a recommended next step, and one primary button. Sample data is fictional — Northwind Traders, case 00001234, owner Alex Rivera. The sample lives here:</p>
+  <div class="callout ok">Repo and step-by-step README: <a href="https://github.com/lparuchuru-titan/hxl-agentic-experience-layer">https://github.com/lparuchuru-titan/hxl-agentic-experience-layer</a></div>
 <pre class="code">{
   "definition": "tile/callout",
   "meta": { "if": "{!$case.slaAtRisk}" },
   "attributes": { "variant": "warning", "title": "SLA at risk" }
 }</pre>
   <p>When <code>slaAtRisk</code> is false, that block is not in the tree. Each host decides what “absent” means. That single line taught us more about HXL than the product headline did.</p>
-  <p>Then we did what the launch implied but did not finish for you: we wrapped the same idea as an MCP app so Claude Desktop could call <code>get_case_next_action</code> and mount the card in chat. The <a href="https://github.com/lparuchuru-titan/hxl-agentic-experience-layer#readme">README</a> is the recipe — mosaic, WidgetBundle, server, Settings → Developer → <strong>running</strong>. This is the path we actually walked.</p>
+  <p>Then we did what the launch implied but did not finish for you: we wrapped the same idea as an MCP app so Claude Desktop could call <code>get_case_next_action</code> and mount the card in chat. Mosaic, WidgetBundle, server, and Settings → Developer → <strong>running</strong> are all in that repo. This is the path we actually walked.</p>
   <div class="chips">
     <span class="chip bld">Author in the playground</span>
     <span class="chip req">Wrap as an MCP tool</span>
