@@ -2,7 +2,7 @@
 
 This repo is a public sample of Salesforce [Headless Experience Layer (HXL)](https://www.salesforce.com/headless/agentic-experience-layer/).
 
-If those words are new, read this page as a tutorial. The [blog post](docs/blog/20260813-headless-experience-layer.html) is the story and the demo video. This README is how we built the component, wrapped it as an MCP app, and turned it on in Claude Desktop.
+If those words are new, read this page as a tutorial. The [blog post](docs/blog/20260813-headless-experience-layer.html) explains what Salesforce released at TDX 2026 and how we learned it by building Case Next Action. This README is the file-by-file recipe.
 
 **In one sentence:** we described a case card once as Mosaic JSON, then let Claude Desktop render it by calling a local tool.
 
@@ -36,7 +36,7 @@ You do not pick hex colors in HXL. You pick **semantic variants** (`primary`, `w
 | `mcp/server.mjs` | MCP server. Tool: `get_case_next_action`. |
 | `mcp/widgets/case-next-action.html` | HTML the host iframes after the tool runs. |
 | `preview/` | Local semantic preview (not a pixel-perfect host). |
-| `docs/blog/20260813-headless-experience-layer.html` | The story + one Claude usage video. |
+| `docs/blog/20260813-headless-experience-layer.html` | What HXL is, when it shipped, how we learned it. |
 | `scripts/validate-widget.py` | Checks the WidgetBundle against authoring rules. |
 
 ## Step 1 — Develop the HXL component
@@ -165,7 +165,7 @@ Show me the Case Next Action card
 4. You should see the white card (case number, High / SLA, amber callout, **Take next action**) — not a paragraph with a spinner underneath.
 5. Click **Take next action** to see the widget post back into the thread. Buttons in this sample send a chat message. They do not update Salesforce.
 
-The usage video lives in the [blog](docs/blog/20260813-headless-experience-layer.html#watch), not again on this page.
+The usage video lives in the [blog](docs/blog/20260813-headless-experience-layer.html#sample), not again on this page.
 
 ## If you only see a spinner
 

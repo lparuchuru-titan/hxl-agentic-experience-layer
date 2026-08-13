@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>I built a case card once. Then I watched it show up in Claude.</title>
+<title>Salesforce Headless Experience Layer — learned by building Case Next Action</title>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
 window.addEventListener('DOMContentLoaded', function () {
@@ -272,113 +272,123 @@ window.addEventListener('DOMContentLoaded', function () {
 <div class="layout">
 <nav class="sticky-toc">
   <div class="toc-title">On this page</div>
-  <a href="#watch">Watch it in Claude</a>
-  <a href="#hxl">What Salesforce shipped</a>
-  <a href="#path">How we used it</a>
-  <a href="#ask">What you type</a>
+  <a href="#hxl">What HXL is</a>
+  <a href="#when">When Salesforce released it</a>
+  <a href="#meant">How it is meant to be used</a>
+  <a href="#learn">How we learned it</a>
+  <a href="#sample">The Case Next Action sample</a>
   <a href="#trust">What stays in Salesforce</a>
 </nav>
 <main class="main">
   <header class="hero">
-    <h1>I built a case card once. Then I watched it show up in Claude.</h1>
-    <p class="sub">Salesforce released Headless Experience Layer so you describe a UI once and every host paints it. This is the story of using that — playground to Claude chat — not a second screenshot of the same card.</p>
-    <p class="byline">13 August 2026 · public sample · one video, one path</p>
+    <h1>Salesforce Headless Experience Layer</h1>
+    <p class="sub">Announced with Headless 360 at TrailblazerDX 2026. One interface description. Every host paints it. We learned the product by building a small sample — Case Next Action — and running it in Claude Desktop.</p>
+    <p class="byline">13 August 2026 · public sample · HXL as Salesforce released it</p>
     <div class="hero-actions">
-      <a class="btn solid" href="#watch">Play the demo</a>
-      <a class="btn" href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Explore the Playground</a>
+      <a class="btn solid" href="#hxl">What HXL is</a>
+      <a class="btn" href="https://www.salesforce.com/headless/agentic-experience-layer/">Salesforce product page</a>
     </div>
   </header>
 
-  <h2 id="watch">Start here: the card in Claude</h2>
-  <p class="story">If you have never heard of Headless Experience Layer, start with the picture, not the acronyms. A support case is on fire. Payment failed. SLA has two and a half hours left. The person — or the agent — does not need a paragraph. They need the number, the customer, the burn, and the next move. In this video that card is sitting inside Claude Desktop chat. We did not rebuild it for Claude. We described it once, then asked Claude to show it.</p>
-  <figure class="shot wide">
-    <video src="../media/claude-chat-demo.mp4" poster="../media/claude-chat-case-next-action.png" controls muted loop playsinline></video>
-    <figcaption>The only recording in this post. Prompt, tool call, live card. Account identity in the sidebar is blurred. Sample case is fictional.</figcaption>
-  </figure>
-  <p>What you are watching: someone types <em>Show me the Case Next Action card</em>. Claude calls a tool named <code>get_case_next_action</code>. The white card appears — case 00001234, High, SLA at risk, Take next action. That is the product promise of HXL used in the wild: one interface description, a host that already knows how to paint.</p>
-  <div class="chips">
-    <span class="chip bld">1. Describe the UI in HXL</span>
-    <span class="chip req">2. Offer it as an MCP tool</span>
-    <span class="chip docs">3. Ask for it in Claude</span>
-  </div>
-
-  <h2 id="hxl">What Salesforce shipped</h2>
-  <p class="story">Salesforce calls this <a href="https://www.salesforce.com/headless/agentic-experience-layer/">Headless Experience Layer</a>. Headless does not mean “no UI.” It means the UI is not locked to Lightning. You write a small JSON tree. Slack, ChatGPT, Claude, Agentforce, or any MCP host can render it with their own look. You do not ship a second stylesheet. You do not paste markdown and hope.</p>
-  <p>The public <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">playground</a> is the place to learn this with your hands. Every tutorial on that site is itself a widget. Expand the code view and you are reading the same JSON a host will render. That is not a mock. That is the runtime.</p>
+  <h2 id="hxl">What Headless Experience Layer is</h2>
+  <p class="story">For a long time, a Salesforce UI meant Lightning. If the same next action needed to show up in Slack, you rebuilt it in Block Kit. In ChatGPT or Claude, you hoped a paragraph would do. Three surfaces, three front ends, one tired team.</p>
+  <p class="story"><a href="https://www.salesforce.com/headless/agentic-experience-layer/">Headless Experience Layer</a> is Salesforce’s answer to that split. Headless does not mean “no UI.” It means the UI is not locked to the Salesforce browser. You describe a card, a decision tile, a rebooking flow — once — as a small JSON tree. Slack, mobile, Microsoft Teams, ChatGPT, Claude, Gemini, Agentforce, or any MCP host renders it with their own look. You do not ship a second stylesheet. You do not paste markdown and hope.</p>
+  <p>Salesforce places HXL inside <strong>Headless 360</strong>: the wider bet that every platform capability should be reachable as an API, an MCP tool, or a CLI command, so humans and agents work on the same governed logic. HXL is the <em>presentation</em> piece of that bet. The agent decides what to do. The Experience Layer decides how that decision appears on whichever surface the user is already in.</p>
   <div class="card">
-    <strong>Words you will see. They are not interchangeable.</strong>
+    <strong>Words the product uses. They are not interchangeable.</strong>
     <table>
       <thead><tr><th>Word</th><th>In plain English</th></tr></thead>
       <tbody>
-        <tr><td>HXL</td><td>Salesforce’s name for “describe the interface once, let each host paint it.”</td></tr>
+        <tr><td>HXL</td><td>Headless Experience Layer. Describe the interface once. Let each host paint it.</td></tr>
         <tr><td>Component</td><td>A primitive brick: <code>tile/text</code>, <code>tile/badge</code>, <code>tile/button</code>, <code>tile/card</code>.</td></tr>
-        <tr><td>Widget</td><td>Those bricks composed into one useful page — our Case Next Action card.</td></tr>
-        <tr><td>Mosaic</td><td>The JSON file. Data (model) + tiles (view) + later, actions (controller).</td></tr>
-        <tr><td>Semantic variant</td><td>Intent, not hex. <code>primary</code>, <code>warning</code>, <code>elevated</code>. Claude picks Claude’s colors. Slack picks Slack’s.</td></tr>
-        <tr><td>MCP</td><td>Model Context Protocol. The plug that lets Claude call a local tool and, here, mount a UI in the thread.</td></tr>
-        <tr><td>Claude Desktop</td><td>The chat app on your computer. Different from Claude Code in the terminal. This demo is the chat app.</td></tr>
+        <tr><td>Widget</td><td>Those bricks composed into one useful page.</td></tr>
+        <tr><td>Mosaic</td><td>The JSON. Data (model) + tiles (view) + later, actions (controller).</td></tr>
+        <tr><td>Semantic variant</td><td>Intent, not hex. <code>primary</code>, <code>warning</code>, <code>elevated</code>.</td></tr>
+        <tr><td>MCP</td><td>Model Context Protocol. The plug a host like Claude uses to call a tool and, here, mount a UI.</td></tr>
       </tbody>
     </table>
   </div>
-  <p>The interesting line in our mosaic is not the heading. It is a callout that only exists when the case is actually on fire:</p>
+
+  <h2 id="when">When Salesforce released it</h2>
+  <p>Salesforce announced <strong>Headless 360</strong> on <strong>15 April 2026</strong> at <strong>TrailblazerDX (TDX) 2026</strong> in San Francisco. The Headless Experience Layer — also shown in the keynote as the Agentforce Experience Layer — shipped as a generally available UI service in that launch, not a slideware mock.</p>
+  <p>The public way to touch it is <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Explore the Playground</a> on the product page. Every tutorial on that site is itself a widget. Expand the code view and you are reading the same JSON a host will render. That is the runtime, not a marketing picture of a runtime.</p>
+  <div class="callout">If you are coming to this in August 2026, HXL is a few months old. The docs and the playground are the source of truth. This post is how one sample used them — not an official Salesforce guide.</div>
+
+  <h2 id="meant">How it is meant to be used</h2>
+  <p class="story">Salesforce’s own examples are things a queue or a traveler would actually click: a flight status card, a rebooking flow, an approval, a case escalation, a renewal alert. The pattern is the same every time.</p>
+  <div class="flow-board">
+    <div class="mermaid">
+flowchart LR
+  A[Business moment<br/>case, renewal, approval] --> B[One Mosaic<br/>semantic tiles]
+  B --> C[Host paints it<br/>Slack ChatGPT Claude Agentforce]
+    </div>
+  </div>
+  <ol>
+    <li><strong>Pick a moment that is more than text.</strong> If a paragraph is enough, you do not need HXL.</li>
+    <li><strong>Describe the interface in the playground</strong> with components and semantic variants. Bind data with expressions like <code>{!$case.subject}</code>. Use <code>meta.if</code> so a warning is absent when it is not true — not hidden with CSS.</li>
+    <li><strong>Let the host render.</strong> Slack looks like Slack. Claude looks like Claude. You do not restyle per channel.</li>
+    <li><strong>Keep trust on the platform.</strong> Headless is the presentation. Sharing, field-level security, and audit stay in Salesforce. Claude is another surface, not a copy of the org.</li>
+  </ol>
+  <p>That is the intended loop. The rest of this post is how we learned that loop by building one card.</p>
+
+  <h2 id="learn">How we learned it: Case Next Action</h2>
+  <p class="story">We did not start with a platform essay. We started with a case a queue would recognize. Payment failed on a renewal. SLA has two and a half hours left. The agent — human or otherwise — needs the number, the customer, the burn, and the next move. The playground already had cousins of this (case summary, SLA status). We wanted the one you act on.</p>
+  <p>So we built <strong>Case Next Action</strong>: a mosaic with a card, priority and SLA badges, a warning callout that only exists when the case is at risk, a recommended next step, and one primary button. Sample data is fictional — Northwind Traders, case 00001234, owner Alex Rivera.</p>
 <pre class="code">{
   "definition": "tile/callout",
   "meta": { "if": "{!$case.slaAtRisk}" },
   "attributes": { "variant": "warning", "title": "SLA at risk" }
 }</pre>
-  <p>When <code>slaAtRisk</code> is false, that block is not hidden with CSS. It is not in the tree. Each host decides what “absent” means. That is HXL doing the work you used to do with three UI kits.</p>
-
-  <h2 id="path">How we used HXL to get that video</h2>
-  <p class="story">Salesforce released the language and the playground. They did not drop a finished “open this in Claude” button. The path we used is short once you see it. The <a href="https://github.com/lparuchuru-titan/hxl-agentic-experience-layer#readme">README</a> is the recipe with file names and clicks. This is the why.</p>
-  <div class="flow-board">
-    <div class="mermaid">
-flowchart LR
-  A[Author mosaic<br/>in HXL playground] --> B[Wrap as an<br/>MCP app]
-  B --> C[Turn the server on<br/>in Claude Desktop]
-  C --> D[Ask for the card<br/>in a new chat]
-    </div>
+  <p>When <code>slaAtRisk</code> is false, that block is not in the tree. Each host decides what “absent” means. That single line taught us more about HXL than the product headline did.</p>
+  <p>Then we did what the launch implied but did not finish for you: we wrapped the same idea as an MCP app so Claude Desktop could call <code>get_case_next_action</code> and mount the card in chat. The <a href="https://github.com/lparuchuru-titan/hxl-agentic-experience-layer#readme">README</a> is the recipe — mosaic, WidgetBundle, server, Settings → Developer → <strong>running</strong>. This is the path we actually walked.</p>
+  <div class="chips">
+    <span class="chip bld">Author in the playground</span>
+    <span class="chip req">Wrap as an MCP tool</span>
+    <span class="chip docs">Ask for it in Claude</span>
   </div>
-
   <div class="wf-step">
     <div class="wf-rail"><div class="wf-dot">1</div><div class="wf-line"></div></div>
     <div class="wf-body">
-      <strong>Describe the card in the playground</strong>
-      <span>We wrote Mosaic JSON: a card, two badges, a warning callout, a primary button. Bindings look like <code>{!$case.subject}</code>. Variants stay semantic. We checked it on more than one host preview so we were not lying to ourselves about “write once.”</span>
+      <strong>Describe the card in HXL</strong>
+      <span>Mosaic JSON in the playground. Bindings <code>{!$case.field}</code>. Semantic variants only. Check more than one host preview.</span>
     </div>
   </div>
   <div class="wf-step">
     <div class="wf-rail"><div class="wf-dot b">2</div><div class="wf-line"></div></div>
     <div class="wf-body">
-      <strong>Keep an org-shaped copy if you want Agentforce later</strong>
-      <span>Same tiles, different envelope: a WidgetBundle with <code>{!$attrs.*}</code> and a schema. Optional for Claude. Required if the same card should live in a Salesforce org. We kept both so the idea was not trapped in a playground paste.</span>
+      <strong>Keep a WidgetBundle if the org should show it too</strong>
+      <span>Same tiles, <code>{!$attrs.*}</code> plus <code>schema.json</code>. Optional for Claude. Required for Agentforce in a Salesforce org.</span>
     </div>
   </div>
   <div class="wf-step">
     <div class="wf-rail"><div class="wf-dot c">3</div><div class="wf-line"></div></div>
     <div class="wf-body">
       <strong>Give Claude a tool, not a JSON file</strong>
-      <span>Claude chat does not open Mosaic JSON by itself. It calls tools. So we wrapped the card as an MCP app: one tool, <code>get_case_next_action</code>, plus an HTML view the host can iframe. Think of MCP as a USB-C port. HXL is what travels through the cable.</span>
+      <span>Claude chat does not open Mosaic JSON by itself. MCP is the cable. HXL is what travels through it. Native stdio, not an HTTP proxy.</span>
     </div>
   </div>
   <div class="wf-step">
     <div class="wf-rail"><div class="wf-dot d">4</div></div>
     <div class="wf-body">
-      <strong>Turn that tool on, then just ask</strong>
-      <span>Register the local server in Claude Desktop settings, fully quit the app, confirm it says <strong>running</strong>, open a new chat, and ask for the card. The README has the Settings path and the config block. You should not need a second video of the same card to understand that click.</span>
+      <strong>Turn the server on, then ask</strong>
+      <span>Claude Desktop Settings → Desktop app → Developer → Local MCP servers. Badge must say <strong>running</strong>. New chat. Ask for the card.</span>
     </div>
   </div>
-  <div class="callout">We hit a spinner the first time. Claude wrote a confident summary. The iframe stayed blank. Two boring causes: the HTML never finished the MCP Apps handshake, and an HTTP proxy instead of native stdio. The README lists the fix. If a turn already broke, start a new chat after a full quit. The host caches the widget aggressively.</div>
 
-  <h2 id="ask">What using it feels like</h2>
-  <p>In a new Claude Desktop chat, after the server shows <strong>running</strong>:</p>
+  <h2 id="sample">The sample, running</h2>
+  <p>After the server is running, a new Claude Desktop chat gets one line:</p>
 <pre class="code">Show me the Case Next Action card</pre>
-  <p>Allow the tool if Claude asks. You want the white card, not a paragraph that says “here is the card” with a loading asterisk underneath. Click <strong>Take next action</strong> if you want the widget to talk back into the thread. In this sample the buttons send a chat message. They do not update Salesforce. That is on purpose. The demo stops at “the host can render and click,” not “we wrote the case.”</p>
-  <p>The data on the card is a fictional Northwind renewal — case 00001234, owner Alex Rivera. Nothing from a real customer org is in the video or the repo.</p>
+  <p>Allow the tool if Claude asks. You want the white card — not a paragraph that says “here is the card” with a spinner underneath. Click <strong>Take next action</strong> and the widget talks back into the thread. In this sample the buttons send a chat message. They do not update Salesforce. The lesson stops at “the host can render and click.”</p>
+  <figure class="shot wide">
+    <video src="../media/claude-chat-demo.mp4" poster="../media/claude-chat-case-next-action.png" controls muted loop playsinline></video>
+    <figcaption>Case Next Action in Claude Desktop after we learned HXL the long way. Identity in the sidebar is blurred. Data is fictional.</figcaption>
+  </figure>
+  <div class="callout">First run we got a spinner. Claude wrote a confident summary. The iframe stayed blank. The HTML had not finished the MCP Apps handshake, and we had put an HTTP proxy in front of a server that wanted stdio. The README lists the fix. If a turn already broke, quit with ⌘Q and start a new chat. The host caches the widget aggressively.</div>
 
   <h2 id="trust">What stays in Salesforce</h2>
-  <p class="story">Headless means the <em>presentation</em> can travel. It does not mean the case record should leave the platform. In a real org the same mosaic would bind through Salesforce — sharing, field-level security, audit — and Claude would be another surface, not a sidecar with a copy of the truth.</p>
-  <p>If you want to build this yourself, the story ends here and the recipe starts in the README: mosaic file, WidgetBundle, MCP server, Settings → Developer → Local MCP servers, then that same prompt.</p>
-  <div class="callout ok">Read the <a href="https://github.com/lparuchuru-titan/hxl-agentic-experience-layer#readme">step-by-step README</a> next. Clone, <code>npm install</code> in <code>mcp/</code>, point Desktop at <code>server.mjs</code>, quit with ⌘Q, ask for the card. That is the whole deploy.</div>
+  <p class="story">Headless means the presentation can travel. It does not mean the case record should leave the platform. In a real org the same mosaic would bind through Salesforce — sharing, field-level security, audit — and Claude would be another surface.</p>
+  <p>If you want to repeat the sample, the story ends here. The clicks and file names are in the README.</p>
+  <div class="callout ok">Clone <a href="https://github.com/lparuchuru-titan/hxl-agentic-experience-layer">hxl-agentic-experience-layer</a>, follow the README, ask for the card. That is how we learned HXL: one component, one host, no second UI kit.</div>
 
   <footer>
     <p>docs/blog/20260813-headless-experience-layer.html · 13 August 2026</p>
