@@ -285,9 +285,8 @@ window.addEventListener('DOMContentLoaded', function () {
 <div class="layout">
 <nav class="sticky-toc">
   <div class="toc-title">On this page</div>
-  <a href="#playground">When the playground landed</a>
-  <a href="#tour">Kate’s official tour</a>
-  <a href="#meant">How HXL is meant to be used</a>
+  <a href="#playground">When it landed</a>
+  <a href="#what">What it does for Salesforce techies</a>
   <a href="#learn">How we learned it</a>
   <a href="#sample">The Case Next Action sample</a>
   <a href="#trust">What stays in Salesforce</a>
@@ -298,7 +297,7 @@ window.addEventListener('DOMContentLoaded', function () {
     <p class="sub">HXL is in beta. The playground is how you learn it. We used it to build Case Next Action and run the card in Claude Desktop.</p>
     <p class="byline">13 August 2026 · public sample · learned in the playground</p>
     <div class="hero-actions">
-      <a class="btn solid" href="#playground">When the playground landed</a>
+      <a class="btn solid" href="#what">What it does</a>
       <a class="btn" href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Open the HXL Playground</a>
     </div>
   </header>
@@ -306,53 +305,37 @@ window.addEventListener('DOMContentLoaded', function () {
   <h2 id="playground">When HXL and the playground landed</h2>
   <p class="story">You already know Headless 360. Here is the simple timeline for HXL itself.</p>
   <div class="callout ok">
-    The Salesforce Headless Experience Layer (HXL) <strong>beta launched at the end of July 2026</strong>, with <strong>organization access rolling out in early August 2026</strong>. Full <strong>General Availability is planned for Dreamforce</strong> later this year. The <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">HXL Playground</a> is how you learn it in the meantime — a live Mosaic runtime on the <a href="https://www.salesforce.com/headless/agentic-experience-layer/">product page</a>. Every tutorial is itself a widget. Expand the code view and you are reading the same JSON Slack, ChatGPT, Claude, or Agentforce will render.
+    The Salesforce Headless Experience Layer (HXL) <strong>beta launched at the end of July 2026</strong>, with <strong>organization access rolling out in early August 2026</strong>. Full <strong>General Availability is planned for Dreamforce</strong> later this year. Learn it in the <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">HXL Playground</a>. For a short official click-through, see <a href="https://admin.salesforce.com/blog/2026/tour-hxl-playground-kate-clicks-through-it">Tour HXL Playground</a>.
   </div>
 
-  <h2 id="tour">What the official tour actually clicks through</h2>
-  <p class="story">Right as the beta opened, Lead Admin Evangelist Kate Lessard sat in the playground and clicked. The post is <a href="https://admin.salesforce.com/blog/2026/tour-hxl-playground-kate-clicks-through-it">Tour HXL Playground | Kate Clicks Through It</a> — under ten minutes, made so you follow along.</p>
-  <figure class="shot wide">
-    <div class="yt">
-      <iframe src="https://www.youtube.com/embed/FxeiOs8YDSo" title="Tour HXL Playground | Kate Clicks Through It" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    </div>
-    <figcaption>Official tour, 23 July 2026. Customize widgets, explore components, start your own. From the <a href="https://www.youtube.com/playlist?list=PLrC_ei2_Pv0GlwxOqMYtNhInzBEQrGv2q">Kate Clicks Through It</a> series.</figcaption>
-  </figure>
-  <p>Kate’s framing is the one we followed. You already know how to shape data and decide what a user should see. HXL is that same judgment, unlocked for agents and surfaces that are not Lightning. The future she names is not another record page. It is deciding how an agent surfaces data, how the information is displayed, and how that work shows up wherever the user already is — Agentforce, Slackbot, ChatGPT, Claude.</p>
-  <p>In the playground that looks like three moves: browse the component catalog, open a pre-built widget and flip host previews, then expand the code view and steal the Mosaic. We did the third move for a case a queue would recognize. Case Next Action is our homework after her tour.</p>
-  <div class="card">
-    <strong>Words you will hit in the playground</strong>
-    <table>
-      <thead><tr><th>Word</th><th>In plain English</th></tr></thead>
-      <tbody>
-        <tr><td>HXL</td><td>Headless Experience Layer. The UI service inside Headless 360.</td></tr>
-        <tr><td>Component</td><td>A primitive brick: <code>tile/text</code>, <code>tile/badge</code>, <code>tile/button</code>, <code>tile/card</code>.</td></tr>
-        <tr><td>Widget</td><td>Those bricks composed into one useful page.</td></tr>
-        <tr><td>Mosaic</td><td>The JSON. Data (model) + tiles (view) + later, actions (controller).</td></tr>
-        <tr><td>Semantic variant</td><td>Intent, not hex. <code>primary</code>, <code>warning</code>, <code>elevated</code>.</td></tr>
-        <tr><td>MCP</td><td>The plug a host like Claude uses to call a tool and mount a UI.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 id="meant">How HXL is meant to be used</h2>
-  <p class="story">You do not open the playground to relearn Headless 360. You open it to describe a moment that is more than text — a flight status card, a rebooking flow, an approval, a case escalation — and watch every host preview paint the same JSON.</p>
+  <h2 id="what">What it does — and why Salesforce techies should care</h2>
+  <p class="story">HXL is the UI service inside Headless 360. You describe an interface once as Mosaic JSON — cards, badges, callouts, buttons, semantic variants like <code>primary</code> and <code>warning</code>. Slack, Agentforce, ChatGPT, Claude, Teams, or any MCP host paints that same tree with its own look. You do not rebuild Block Kit, then an LWC, then a chat markdown card for the same next action.</p>
   <div class="flow-board">
     <div class="mermaid">
 flowchart LR
-  A[Business moment<br/>case, renewal, approval] --> B[One Mosaic<br/>semantic tiles]
-  B --> C[Host paints it<br/>Slack ChatGPT Claude Agentforce]
+  A[One Mosaic<br/>in Salesforce] --> B[Agentforce]
+  A --> C[Slack]
+  A --> D[Claude / ChatGPT]
+  A --> E[Mobile / Teams]
     </div>
   </div>
-  <ol>
-    <li><strong>Pick a moment that is more than text.</strong> If a paragraph is enough, you do not need HXL.</li>
-    <li><strong>Describe the interface in the playground</strong> with components and semantic variants. Bind data with expressions like <code>{!$case.subject}</code>. Use <code>meta.if</code> so a warning is absent when it is not true — not hidden with CSS.</li>
-    <li><strong>Let the host render.</strong> Slack looks like Slack. Claude looks like Claude. You do not restyle per channel.</li>
-    <li><strong>Keep trust on the platform.</strong> Headless is the presentation. Sharing, field-level security, and audit stay in Salesforce. Claude is another surface, not a copy of the org.</li>
-  </ol>
-  <p>That is the intended loop. The rest of this post is how we learned that loop by building one card.</p>
+  <div class="card">
+    <strong>What that means on a real team</strong>
+    <table>
+      <thead><tr><th>Role</th><th>Why HXL is useful</th></tr></thead>
+      <tbody>
+        <tr><td>Admin</td><td>You already decide what a user should see. HXL is that same judgment for agents: which fields, which warning, which button — without a new page layout per channel.</td></tr>
+        <tr><td>Developer</td><td>One widget instead of three front ends. Bindings like <code>{!$case.subject}</code> and <code>meta.if</code> stay in metadata. The host owns pixels. You own the contract.</td></tr>
+        <tr><td>Architect</td><td>Presentation can travel. Sharing, FLS, and audit stay in Salesforce. Claude is another surface, not a sidecar copy of the org.</td></tr>
+        <tr><td>Agentforce builder</td><td>A case escalation or renewal alert can be a card the agent shows, not a paragraph the model invents each turn.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Use it when the moment is more than text — SLA at risk, approve this, take the next step. If a sentence is enough, skip HXL. If the same next action has to look native in Lightning <em>and</em> Slack <em>and</em> a chat host, this is the layer that stops you writing it three times.</p>
+  <p>In the playground that is three moves: browse components, flip host previews on a widget, expand the code and copy the Mosaic. That is how we started Case Next Action.</p>
 
   <h2 id="learn">How we learned it: Case Next Action</h2>
-  <p class="story">We did not start with a platform essay. We started where Kate left the cursor: in the playground, with a case a queue would recognize. Payment failed on a renewal. SLA has two and a half hours left. The agent — human or otherwise — needs the number, the customer, the burn, and the next move. The playground already had cousins of this (case summary, SLA status). We wanted the one you act on.</p>
+  <p class="story">We started in the playground with a case a queue would recognize. Payment failed on a renewal. SLA has two and a half hours left. The agent — human or otherwise — needs the number, the customer, the burn, and the next move. The playground already had cousins of this (case summary, SLA status). We wanted the one you act on.</p>
   <p>So we built <strong>Case Next Action</strong>: a mosaic with a card, priority and SLA badges, a warning callout that only exists when the case is at risk, a recommended next step, and one primary button. Sample data is fictional — Northwind Traders, case 00001234, owner Alex Rivera.</p>
 <pre class="code">{
   "definition": "tile/callout",
