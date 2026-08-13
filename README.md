@@ -2,7 +2,7 @@
 
 Public demo of Salesforce [Headless Experience Layer (HXL)](https://www.salesforce.com/headless/agentic-experience-layer/): define a UI once as Mosaic JSON, then render it natively in Slack, ChatGPT, Claude, Agentforce, or any MCP host.
 
-This repo is the companion to the post **[Define the interface once. Render it anywhere.](docs/blog/20260813-headless-experience-layer.html)**.
+This repo is the companion to the post **[I built a case card once. Then I watched it show up in Claude.](docs/blog/20260813-headless-experience-layer.html)** — including the HXL → Claude Desktop deploy steps.
 
 ## Case Next Action
 
@@ -61,24 +61,23 @@ Claude Code reviewed the Mosaic and WidgetBundle (13 August 2026): all six autho
 
 ## Claude demo
 
-This repo ships an MCP app that Claude can call. It is already registered on this machine as **`hxl-case-next-action`**.
+Full click-path (config JSON, � demo
 
-**Claude Code** (user scope):
+Full click-path (config JSON, ⌘Q, Search and tools, the prompt) is in the [blog’s deploy section](docs/blog/20260813-headless-experience-layer.html#deploy).
 
-```bash
-# already added:
-# claude mcp add --scope user hxl-case-next-action -- node mcp/server.mjs
+**What git recorded**
 
-claude -p "Show me the Case Next Action card"
+| File | What it shows |
+|---|---|
+| `docs/media/case-next-action.png` + `case-next-action-demo.mp4` | Mosaic / semantic preview of the card |
+| `docs/media/claude-chat-case-next-action.png` + `claude-chat-demo.mp4` | The card **in Claude Desktop chat** (account name and company mark blurred) |
+
+There is **no** screenshot reel yet of the Search and tools toggle — that part is written as steps in the blog.
+
+**Claude Desktop:** add `mcp/server.mjs` as a stdio server in `claude_desktop_config.json`, quit with ⌘Q, new chat, enable **hxl-case-next-action**, then:
+
 ```
-
-**Claude Desktop:** the same stdio server is in `claude_desktop_config.json`. Fully quit Claude (⌘Q) and reopen, then in a new chat: `Show me the Case Next Action card`.
-
-**Local widget preview:**
-
-```bash
-node mcp/server.mjs --http
-# http://127.0.0.1:8787/widget-preview
+Show me the Case Next Action card
 ```
 
 ## Two JSON shapes, one idea
