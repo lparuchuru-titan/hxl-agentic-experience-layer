@@ -385,18 +385,25 @@ flowchart LR
   }
 }</pre>
   <p>That block lives in Claude Desktop’s <code>claude_desktop_config.json</code> (macOS: <code>~/Library/Application Support/Claude/</code>). After <code>npm install</code> in <code>mcp/</code>, Desktop launches the server itself. You do not keep a terminal open.</p>
-  <div class="callout">Git in this repo has the <strong>result</strong> — the card in Claude chat, and a short zoom demo — with the account name and company mark blurred. It does <strong>not</strong> yet have a click-by-click recording of the Search and tools toggle. The steps below are that missing reel, written down.</div>
 
   <h2 id="enable">Turn the MCP on in Claude Desktop</h2>
-  <p>Claude Desktop will not show a new local server until it is fully restarted. Closing the window is not enough.</p>
+  <p class="story">I kept looking next to the composer for a sliders control. On this build of Claude Desktop the switch is not there. It lives in Settings. Here is the actual screen, captured from the running app — machine paths covered.</p>
   <ol>
-    <li>Save the <code>mcpServers</code> entry above. Use a real absolute path to <code>server.mjs</code>.</li>
-    <li>Quit Claude with <span class="click">⌘Q</span>. Reopen the app.</li>
-    <li>Start a <strong>new chat</strong>. Old threads keep a dead iframe if you already failed once.</li>
-    <li>Open <strong>Search and tools</strong> (the sliders / tools control next to the composer).</li>
-    <li>Find <strong>hxl-case-next-action</strong> and turn it on.</li>
+    <li>Open Claude Desktop. Press <span class="click">⌘,</span> (or Claude menu → Settings).</li>
+    <li>In the left rail, under <strong>Desktop app</strong>, open <strong>Developer</strong>. The search box at the top of Settings also finds it if you type <code>developer</code>.</li>
+    <li>You want <strong>Local MCP servers</strong>. After a clean restart you should see <code>hxl-case-next-action</code> with a blue <strong>running</strong> badge.</li>
+    <li>If the list is empty, click <strong>Edit Config</strong>, paste the <code>mcpServers</code> block above, save, then quit with <span class="click">⌘Q</span> and reopen. Closing the window is not enough.</li>
   </ol>
-  <p>If the name is missing, Desktop never loaded the config. Check the JSON comma, the <code>node</code> path, and the MCP log under <code>~/Library/Logs/Claude/</code>.</p>
+  <figure class="shot wide">
+    <img src="../media/claude-enable-mcp-developer.png" alt="Claude Desktop Settings, Desktop app Developer tab, Local MCP servers showing hxl-case-next-action running">
+    <figcaption>This is the enable screen. Settings → Desktop app → Developer → Local MCP servers. The server name and the running badge are the whole point. Command and argument paths are covered on purpose.</figcaption>
+  </figure>
+  <p>If you wander into <strong>Extensions</strong> first, you are not lost. That is the product name for “let Claude talk to things on this machine.” <strong>Advanced settings</strong> and <strong>Developer</strong> both end at the same config.</p>
+  <figure class="shot wide">
+    <img src="../media/claude-enable-mcp-extensions.png" alt="Claude Desktop Settings, Desktop app Extensions tab">
+    <figcaption>Settings → Desktop app → Extensions. Same neighborhood. Developer is where you confirm the local server is running.</figcaption>
+  </figure>
+  <p>If the name is missing after ⌘Q, Desktop never loaded the config. Check the JSON comma, the <code>node</code> path, and the MCP log under <code>~/Library/Logs/Claude/</code>.</p>
 
   <h2 id="use">Use it</h2>
   <p>In that new chat, send exactly this:</p>

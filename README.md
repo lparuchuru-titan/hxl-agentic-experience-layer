@@ -61,18 +61,22 @@ Claude Code reviewed the Mosaic and WidgetBundle (13 August 2026): all six autho
 
 ## Claude demo
 
-Full click-path (config JSON, ⌘Q, Search and tools, the prompt) is in the [blog’s deploy section](docs/blog/20260813-headless-experience-layer.html#deploy).
+Full click-path is in the [blog’s deploy section](docs/blog/20260813-headless-experience-layer.html#deploy). Enable the server here:
+
+**Settings → Desktop app → Developer → Local MCP servers**
+
+![Enable hxl-case-next-action in Claude Desktop Developer settings](docs/media/claude-enable-mcp-developer.png)
 
 **What git recorded**
 
 | File | What it shows |
 |---|---|
+| `docs/media/claude-enable-mcp-developer.png` | Settings → Developer → Local MCP servers, `hxl-case-next-action` **running** (paths covered) |
+| `docs/media/claude-enable-mcp-extensions.png` | Settings → Extensions, the sibling page |
 | `docs/media/case-next-action.png` + `case-next-action-demo.mp4` | Mosaic / semantic preview of the card |
 | `docs/media/claude-chat-case-next-action.png` + `claude-chat-demo.mp4` | The card **in Claude Desktop chat** (account name and company mark blurred) |
 
-There is **no** screenshot reel yet of the Search and tools toggle — that part is written as steps in the blog.
-
-**Claude Desktop:** add `mcp/server.mjs` as a stdio server in `claude_desktop_config.json`, quit with ⌘Q, new chat, enable **hxl-case-next-action**, then:
+**Claude Desktop:** add `mcp/server.mjs` as a stdio server in `claude_desktop_config.json`, quit with ⌘Q, confirm it is **running** on the Developer page, new chat, then:
 
 ```
 Show me the Case Next Action card
