@@ -1,0 +1,161 @@
+{
+  "type": "mosaic",
+  "definition": "tile/mosaic",
+  "dataProviders": [
+    {
+      "definition": "inline-data",
+      "expressionKey": "$case",
+      "inline": true,
+      "value": {
+        "caseNumber": "00001234",
+        "subject": "Payment failed on renewal invoice",
+        "priority": "High",
+        "slaHoursLeft": 2.5,
+        "slaAtRisk": true,
+        "customerName": "Northwind Traders",
+        "recommendedAction": "Confirm the card on file, then send the retry link and stay on the case until the payment posts.",
+        "ownerName": "Alex Rivera"
+      }
+    }
+  ],
+  "children": [
+    {
+      "definition": "tile/column",
+      "attributes": {
+        "gap": "lg",
+        "padding": "lg"
+      },
+      "children": [
+        {
+          "definition": "tile/card",
+          "attributes": {
+            "padding": "lg",
+            "variant": "elevated"
+          },
+          "children": [
+            {
+              "definition": "tile/row",
+              "attributes": {
+                "gap": "sm",
+                "align": "center",
+                "justify": "between"
+              },
+              "children": [
+                {
+                  "definition": "tile/text",
+                  "attributes": {
+                    "text": "{!$case.caseNumber}",
+                    "variant": "caption"
+                  }
+                },
+                {
+                  "definition": "tile/row",
+                  "attributes": {
+                    "gap": "sm",
+                    "align": "center"
+                  },
+                  "children": [
+                    {
+                      "definition": "tile/badge",
+                      "attributes": {
+                        "label": "{!$case.priority}",
+                        "variant": "secondary"
+                      }
+                    },
+                    {
+                      "definition": "tile/badge",
+                      "attributes": {
+                        "label": "SLA",
+                        "variant": "warning"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "definition": "tile/text",
+              "attributes": {
+                "text": "{!$case.subject}",
+                "variant": "h2"
+              }
+            },
+            {
+              "definition": "tile/text",
+              "attributes": {
+                "text": "{!$case.customerName}",
+                "variant": "caption"
+              }
+            },
+            {
+              "definition": "tile/separator"
+            },
+            {
+              "definition": "tile/callout",
+              "meta": {
+                "if": "{!$case.slaAtRisk}"
+              },
+              "attributes": {
+                "variant": "warning",
+                "title": "SLA at risk"
+              },
+              "children": [
+                {
+                  "definition": "tile/text",
+                  "attributes": {
+                    "text": "{!$case.slaHoursLeft}",
+                    "variant": "body"
+                  }
+                }
+              ]
+            },
+            {
+              "definition": "tile/text",
+              "attributes": {
+                "text": "Recommended next action",
+                "variant": "h3"
+              }
+            },
+            {
+              "definition": "tile/text",
+              "attributes": {
+                "text": "{!$case.recommendedAction}",
+                "variant": "body"
+              }
+            },
+            {
+              "definition": "tile/row",
+              "attributes": {
+                "gap": "sm",
+                "align": "center"
+              },
+              "children": [
+                {
+                  "definition": "tile/button",
+                  "attributes": {
+                    "label": "Take next action",
+                    "variant": "primary"
+                  }
+                },
+                {
+                  "definition": "tile/button",
+                  "attributes": {
+                    "label": "View case",
+                    "variant": "secondary"
+                  }
+                }
+              ]
+            },
+            {
+              "definition": "tile/text",
+              "attributes": {
+                "text": "{!$case.ownerName}",
+                "variant": "caption"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

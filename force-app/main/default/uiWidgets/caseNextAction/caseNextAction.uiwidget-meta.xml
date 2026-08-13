@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UiWidgetBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Case Next Action</masterLabel>
+    <description>Renders a case next-action card with SLA risk, recommended step, and owner.</description>
+    <widgetType>JSON</widgetType>
+</UiWidgetBundle>

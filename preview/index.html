@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case Next Action — HXL preview</title>
+  <style>
+    :root {
+      --ink: #1c1917; --muted: #78716c; --line: #e7e5e4;
+      --paper: #f7f3eb; --card: #fffdf8; --warn: #b45309; --warn-bg: #fff8e8;
+      --teal: #0E7C86; --navy: #1A1A2E;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--paper); color: var(--ink);
+      font: 16px/1.55 "Segoe UI", system-ui, sans-serif;
+      padding: 32px 18px 64px;
+    }
+    .wrap { max-width: 560px; margin: 0 auto; }
+    .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    h1 { font-size: 1.35rem; margin: 6px 0 18px; }
+    .note { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 22px; box-shadow: 0 8px 24px rgba(28,25,23,.06);
+    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .badges { display: flex; gap: 6px; }
+    .badge {
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: #efece4; color: #44403c;
+    }
+    .badge.warn { background: #fde68a; color: #78350f; }
+    .subject { font-size: 1.2rem; font-weight: 700; margin: 12px 0 4px; }
+    .caption { font-size: 13px; color: var(--muted); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
+    .callout {
+      border-left: 4px solid var(--warn); background: var(--warn-bg);
+      padding: 10px 12px; border-radius: 0 10px 10px 0; margin: 10px 0 14px;
+    }
+    .callout strong { display: block; margin-bottom: 2px; }
+    .actions { display: flex; gap: 8px; margin: 14px 0 10px; }
+    button {
+      border: 0; border-radius: 999px; padding: 8px 14px; font-weight: 650; cursor: pointer;
+    }
+    .primary { background: var(--navy); color: #fff; }
+    .secondary { background: #e7e5e4; color: var(--ink); }
+    code { font-size: 12px; background: #efece4; padding: 1px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Headless Experience Layer</div>
+    <h1>Semantic preview of the Case Next Action mosaic</h1>
+    <p class="note">This is not Slack or Agentforce. It is a local stand-in that reads the same Mosaic JSON the playground uses — intent and structure, not pixels. Paste <code>mosaics/case-next-action.json</code> into the <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">HXL Playground</a> for a host-native render.</p>
+    <div id="root">Loading mosaic…</div>
+  </div>
+  <script>
+    const expr = (text, data) => String(text || '').replace(/\{!\$case\.([A-Za-z0-9_]+)\}/g, (_, k) => data[k] ?? '');
+    const truthy = (v) => v === true || v === 'true' || v === 1;
+
+    function render(node, data) {
+      if (!node || typeof node !== 'object') return '';
+      const def = node.definition || '';
+      const a = node.attributes || {};
+      const kids = (node.children || []).map(c => render(c, data)).join('');
+      if (node.meta && node.meta.if) {
+        const m = String(node.meta.if).match(/\{!\$case\.([A-Za-z0-9_]+)\}/);
+        if (m && !truthy(data[m[1]])) return '';
+      }
+      if (def === 'tile/text') {
+        const v = a.variant || 'body';
+        if (v === 'h2') return `<div class="subject">${expr(a.text, data)}</div>`;
+        if (v === 'h3') return `<h3 style="margin:12px 0 6px;font-size:15px">${expr(a.text, data)}</h3>`;
+        if (v === 'caption') return `<div class="caption">${expr(a.text, data)}</div>`;
+        return `<p style="margin:6px 0">${expr(a.text, data)}</p>`;
+      }
+      if (def === 'tile/badge') return `<span class="badge ${a.variant === 'warning' ? 'warn' : ''}">${expr(a.label, data)}</span>`;
+      if (def === 'tile/button') return `<button class="${a.variant === 'primary' ? 'primary' : 'secondary'}">${a.label || ''}</button>`;
+      if (def === 'tile/separator') return '<hr>';
+      if (def === 'tile/callout') return `<div class="callout"><strong>${a.title || ''}</strong>${kids}</div>`;
+      if (def === 'tile/row' && (a.justify === 'between' || (node.children || []).some(c => (c.definition || '').includes('badge')))) {
+        const cls = a.justify === 'between' ? 'row' : 'badges';
+        return `<div class="${cls}">${kids}</div>`;
+      }
+      if (def === 'tile/row' && (node.children || []).some(c => c.definition === 'tile/button')) {
+        return `<div class="actions">${kids}</div>`;
+      }
+      if (def === 'tile/card') return `<div class="card">${kids}</div>`;
+      return kids;
+    }
+
+    fetch('../mosaics/case-next-action.json')
+      .then(r => r.json())
+      .then(mosaic => {
+        const provider = (mosaic.dataProviders || []).find(p => p.expressionKey === '$case');
+        const data = provider ? provider.value : {};
+        document.getElementById('root').innerHTML = render(mosaic, data);
+      })
+      .catch(err => {
+        document.getElementById('root').textContent = 'Could not load mosaics/case-next-action.json. Open this file via a local static server, or paste the mosaic into the HXL Playground.';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Define the interface once. Render it anywhere. — Headless Experience Layer</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  if (!window.mermaid) return;
+  try {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      securityLevel: 'loose',
+      flowchart: { curve: 'basis', padding: 18, htmlLabels: true },
+      themeVariables: {
+        primaryColor: '#0E7C86',
+        primaryTextColor: '#fff',
+        primaryBorderColor: '#0a5b63',
+        secondaryColor: '#5B8DEF',
+        tertiaryColor: '#f7f3eb',
+        lineColor: '#78716c',
+        fontFamily: 'system-ui,Segoe UI,sans-serif',
+        fontSize: '15px',
+        clusterBkg: '#fffdf8',
+        clusterBorder: '#e7e5e4',
+        edgeLabelBackground: '#fffdf8'
+      }
+    });
+  } catch (e) {}
+});
+</script>
+<style>
+  :root {
+    --req: #5B8DEF;
+    --des: #9B6DFF;
+    --bld: #0E7C86;
+    --adm: #E8A317;
+    --qa: #E85D4C;
+    --docs: #2D9F6F;
+    --router: #1A1A2E;
+    --ink: #1c1917;
+    --slate: #44403c;
+    --muted: #78716c;
+    --line: #e7e5e4;
+    --paper: #f7f3eb;
+    --card: #fffdf8;
+    --shadow: 0 2px 10px rgba(28,25,23,.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse at 10% 0%, rgba(91,141,239,.08), transparent 45%),
+      radial-gradient(ellipse at 90% 10%, rgba(14,124,134,.08), transparent 40%),
+      var(--paper);
+    color: var(--ink);
+    font: 17px/1.7 "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 820px);
+    gap: 28px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 22px 96px;
+  }
+  .sticky-toc {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .sticky-toc .toc-title {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .sticky-toc a {
+    display: block;
+    color: var(--slate);
+    text-decoration: none;
+    padding: 5px 0 5px 10px;
+    border-left: 2px solid transparent;
+  }
+  .sticky-toc a:hover { color: var(--bld); border-left-color: var(--bld); }
+  .main { min-width: 0; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sticky-toc { display: none; }
+  }
+  .hero {
+    background: linear-gradient(135deg, #1A1A2E 0%, #0E7C86 70%, #2D9F6F 120%);
+    color: #fff;
+    border-radius: 18px;
+    padding: 36px 34px 30px;
+    box-shadow: 0 12px 36px rgba(26,26,46,.28);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -20% -40% 40%;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255,255,255,.12), transparent 60%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    margin: 0 0 12px;
+    font: 700 2rem/1.2 "IBM Plex Sans", "Segoe UI", sans-serif;
+    letter-spacing: -.02em;
+  }
+  .hero .sub {
+    margin: 0;
+    font-size: 1.05rem;
+    opacity: .93;
+    max-width: 40em;
+  }
+  .hero .byline { margin-top: 16px; font-size: 13px; opacity: .8; }
+  .hero-actions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 14px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    border: 1px solid rgba(255,255,255,.35);
+    color: #fff; background: rgba(255,255,255,.12);
+  }
+  .btn.solid { background: #fff; color: var(--router); border-color: #fff; }
+  h2 {
+    margin: 48px 0 14px;
+    font: 700 1.55rem/1.25 "IBM Plex Sans", sans-serif;
+    color: var(--ink);
+    scroll-margin-top: 18px;
+  }
+  h3 {
+    margin: 28px 0 10px;
+    font: 650 1.15rem/1.3 "IBM Plex Sans", sans-serif;
+    color: var(--slate);
+  }
+  p.story {
+    font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #292524;
+  }
+  p { margin: 12px 0; }
+  a { color: var(--bld); }
+  code {
+    background: #efece4; color: #134e4a;
+    padding: 1px 6px; border-radius: 5px;
+    font: 850 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  pre.code {
+    background: #1A1A2E; color: #e7e5e4;
+    border-radius: 12px; padding: 14px 16px;
+    overflow: auto; font: 13px/1.55 ui-monospace, Menlo, monospace;
+    margin: 14px 0;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+  .callout {
+    border-left: 4px solid var(--adm);
+    background: #fff8e8;
+    padding: 14px 16px;
+    border-radius: 0 12px 12px 0;
+    margin: 16px 0;
+  }
+  .callout.ok { border-left-color: var(--docs); background: #eefaf3; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px; border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid var(--line); background: #fff;
+  }
+  .chip.bld { background: #e6f5f6; color: #0a3f44; border-color: #9fd4d8; }
+  .chip.req { background: #e8f0fc; color: #1e3a6e; border-color: #b6d0f5; }
+  .chip.docs { background: #e8f7ef; color: #14523a; border-color: #9ed9bc; }
+  .chip.qa { background: #fdeceb; color: #7a2418; border-color: #f5b7ae; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0;
+    font-size: 14px; background: #fff; border: 1px solid var(--line);
+    border-radius: 12px; overflow: hidden;
+  }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f5f0e6; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--slate); }
+  tr:last-child td { border-bottom: none; }
+  .flow-board {
+    background: linear-gradient(180deg, #fffef9, #f3efe6);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 16px 16px;
+    margin: 18px 0;
+    box-shadow: var(--shadow);
+  }
+  footer {
+    margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="sticky-toc">
+  <div class="toc-title">On this page</div>
+  <a href="#tldr">The idea</a>
+  <a href="#playground">How the playground is built</a>
+  <a href="#mosaic">Mosaic JSON</a>
+  <a href="#widget">One component</a>
+  <a href="#trust">Trust travels with it</a>
+  <a href="#try">Try it</a>
+</nav>
+<main class="main">
+  <header class="hero">
+    <h1>Define the interface once. Render it anywhere.</h1>
+    <p class="sub">Salesforce Headless Experience Layer is the control plane for how an agent shows up — Slack, ChatGPT, Claude, Agentforce, or any MCP host — without rewriting the UI for each surface.</p>
+    <p class="byline">13 August 2026 · public sample · Mosaic + WidgetBundle</p>
+    <div class="hero-actions">
+      <a class="btn solid" href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Explore the Playground</a>
+      <a class="btn" href="https://www.salesforce.com/headless/agentic-experience-layer/">HXL product page</a>
+    </div>
+  </header>
+
+  <h2 id="tldr">The idea</h2>
+  <p class="story">Enterprise apps used to be rigid: built once, for one device. Agents made that worse. A case summary that looks right in Lightning is a pile of markdown in Slack, a JSON blob in ChatGPT, and a custom Block Kit job for whoever drew the short straw. The Headless Experience Layer (HXL) splits <em>what the agent should show</em> from <em>how the host paints it</em>.</p>
+  <p>Salesforce’s own framing is three claims:</p>
+  <div class="chips">
+    <span class="chip bld">Build once</span>
+    <span class="chip req">Deploy everywhere</span>
+    <span class="chip docs">Inherit governance</span>
+  </div>
+  <ul>
+    <li><strong>Build once</strong> — pricing rules, validation, and next-best-action stay in one definition. No porting the same card to five UI kits.</li>
+    <li><strong>Deploy everywhere</strong> — a translation layer turns that definition into Slack Block Kit, a mobile screen, Lightning, or a structured response for ChatGPT / Claude / any MCP host.</li>
+    <li><strong>Automate governance</strong> — the experience is still a Salesforce surface. Permissions, sharing, and audit trails travel with it. The external client is not a security outlier.</li>
+  </ul>
+  <p>HXL is the control plane for how AI shows up. It is built on Custom Lightning Types and a multichannel UI framework, so the same agent response can adapt natively across LEX, mobile, Slack, Teams, ChatGPT, and first- or third-party surfaces.</p>
+
+  <h2 id="playground">How the playground is built</h2>
+  <p class="story">The product page’s “Explore the Playground” link is not a marketing mock. It is a live Mosaic runtime. The tutorials are the documentation <em>and</em> the proof: each lesson is itself a widget. Expand the code view on any step and you are looking at the same JSON the host will render.</p>
+  <div class="card">
+    <strong>Playground vocabulary</strong>
+    <table>
+      <thead><tr><th>Word</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Component</td><td>A primitive — the smallest renderable unit (<code>tile/text</code>, <code>tile/button</code>, <code>tile/card</code>).</td></tr>
+        <tr><td>Widget</td><td>A surface-agnostic composition of components. One page that is meant to work everywhere.</td></tr>
+        <tr><td>Mosaic</td><td>The declarative JSON format. Type = Model, Widget = View, Action = Controller.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The runtime exposes a small palette — 36 <code>tile/*</code> blocks at the time of writing — and tags each one with the channels it already knows: <code>a2ui</code>, <code>lwc</code>, <code>react</code>, and for most of them <code>slack</code>. Accordion, modal, tabs, and table are still web-first. Button, card, badge, callout, list, and text already speak Slack.</p>
+  <p>That is the whole trick. You do not design a Slack UI and a Claude UI. You pick semantic variants — <code>primary</code>, <code>warning</code>, <code>elevated</code> — and let the host map them. The playground is explicit: style intent, not pixels.</p>
+  <div class="flow-board">
+    <div class="mermaid">
+flowchart LR
+  A[Mosaic JSON] --> B[HXL runtime]
+  B --> C[Slack]
+  B --> D[ChatGPT]
+  B --> E[Claude]
+  B --> F[Agentforce]
+  B --> G[Any MCP host]
+    </div>
+  </div>
+
+  <h2 id="mosaic">Mosaic JSON</h2>
+  <p>A playground widget is a tree. Root is <code>type: mosaic</code> / <code>definition: tile/mosaic</code>. Children are blocks. Data arrives through <code>dataProviders</code>. Bindings use <code>{!$var.path}</code>. Conditionals and lists use <code>meta.if</code> and <code>meta.forEach</code>.</p>
+<pre class="code">{
+  "definition": "tile/text",
+  "attributes": {
+    "text": "Hello, Widget!",
+    "variant": "h1"
+  }
+}</pre>
+  <p>That is the Hello World tutorial, verbatim. Everything else in the playground — shopping cart, conditional admin banners, product-card mosaics — is the same tree with more children and a data provider.</p>
+  <p>A Salesforce org wraps the same tree in a WidgetBundle so the platform can type-check it:</p>
+  <table>
+    <thead><tr><th></th><th>Playground Mosaic</th><th>Org WidgetBundle</th></tr></thead>
+    <tbody>
+      <tr><td>Envelope</td><td><code>type: mosaic</code></td><td><code>type: lightning__agentforceWidget</code></td></tr>
+      <tr><td>Root block</td><td><code>tile/mosaic</code></td><td><code>tile/widget</code></td></tr>
+      <tr><td>Bindings</td><td><code>{!$case.subject}</code></td><td><code>{!$attrs.subject}</code></td></tr>
+      <tr><td>Contract</td><td>inline <code>dataProviders</code></td><td><code>schema.json</code> + <code>.uiwidget-meta.xml</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout">Same primitives. Different envelope. The playground is how you learn the tree. The WidgetBundle is how you register it in an org.</div>
+
+  <h2 id="widget">One component: Case Next Action</h2>
+  <p class="story">The playground already ships agent-action mosaics in this shape — case summary, SLA status, similar cases, rebooking options. The sample in this repo is the one agents actually need on a busy queue: <strong>what is the case, is the SLA burning, what should I do next</strong>.</p>
+  <p>The card is one <code>tile/card</code>. A row of badges for priority and SLA. A warning <code>tile/callout</code> gated by <code>meta.if</code> on <code>slaAtRisk</code>. One primary button. Semantic variants only — no hex colors, no pixel widths.</p>
+<pre class="code">{
+  "definition": "tile/callout",
+  "meta": { "if": "{!$case.slaAtRisk}" },
+  "attributes": { "variant": "warning", "title": "SLA at risk" },
+  "children": [
+    { "definition": "tile/text", "attributes": { "text": "{!$case.slaHoursLeft}" } }
+  ]
+}</pre>
+  <p>When <code>slaAtRisk</code> is false, the callout is not hidden with CSS. It is not in the tree. That is the point of a declarative host: each surface can omit, collapse, or announce the block in its own way.</p>
+  <p>Paste <code>mosaics/case-next-action.json</code> into the playground. Deploy <code>force-app/main/default/uiWidgets/caseNextAction/</code> only when you mean to put it in an org — three files, co-located, <code>widgetType: JSON</code>.</p>
+
+  <h2 id="trust">Trust travels with it</h2>
+  <p>Without a control plane, every new channel reimplements security, data, and UI. Salesforce calls that context dilution and logic fragmentation. HXL’s answer is boring on purpose: the widget is still metadata. Field-level security, sharing, and audit are not a sidecar you bolt onto ChatGPT. They are the same rules the case already had in the CRM.</p>
+  <p>That is why “headless” here does not mean “unauthenticated JSON on the public internet.” It means the <em>presentation</em> is headless. The brain stays in the platform.</p>
+  <div class="callout ok">Operational agility (one definition), deterministic governance (logic cannot wander outside business rules), lower integration tax (no custom bridge per surface), inherited security (native permissions and sharing).</div>
+
+  <h2 id="try">Try it</h2>
+  <ol>
+    <li>Open <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Explore the Playground</a> and expand any tutorial’s code view. You are reading Mosaic.</li>
+    <li>Paste <a href="../../mosaics/case-next-action.json"><code>mosaics/case-next-action.json</code></a> and switch hosts.</li>
+    <li>Compare the org envelope in <code>force-app/main/default/uiWidgets/caseNextAction/</code>.</li>
+    <li>Source and license: the GitHub repo this post ships in.</li>
+  </ol>
+  <p>HXL is included with the Agentforce 360 platform license — no extra per-user fee to orchestrate licensed Salesforce surfaces. The playground, the Mosaic format, and the WidgetBundle skill are how you actually author against it.</p>
+
+  <footer>
+    <p>docs/blog/20260813-headless-experience-layer.html · 13 August 2026</p>
+    <p>Independent sample. Product names belong to Salesforce, Inc. Sample case data is fictional.</p>
+  </footer>
+</main>
+</div>
+</body>
+</html>

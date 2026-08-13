@@ -1,0 +1,10 @@
+{
+  "caseNumber": "00001234",
+  "subject": "Payment failed on renewal invoice",
+  "priority": "High",
+  "slaHoursLeft": 2.5,
+  "slaAtRisk": true,
+  "customerName": "Northwind Traders",
+  "recommendedAction": "Confirm the card on file, then send the retry link and stay on the case until the payment posts.",
+  "ownerName": "Alex Rivera"
+}

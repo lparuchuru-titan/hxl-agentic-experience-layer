@@ -1,0 +1,29 @@
+{
+  "type": "mosaic",
+  "definition": "tile/mosaic",
+  "children": [
+    {
+      "definition": "tile/column",
+      "attributes": {
+        "gap": "md",
+        "padding": "lg"
+      },
+      "children": [
+        {
+          "definition": "tile/text",
+          "attributes": {
+            "text": "Hello, Widget!",
+            "variant": "h1"
+          }
+        },
+        {
+          "definition": "tile/text",
+          "attributes": {
+            "text": "Define the interface once as Mosaic JSON. Render it natively in Slack, ChatGPT, Claude, Agentforce, or any MCP host.",
+            "variant": "body"
+          }
+        }
+      ]
+    }
+  ]
+}

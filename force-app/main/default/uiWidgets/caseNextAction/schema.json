@@ -1,0 +1,52 @@
+{
+  "title": "Case Next Action",
+  "description": "Shows a case's next recommended action, SLA risk, and owner for Agentforce and MCP hosts.",
+  "type": "object",
+  "properties": {
+    "attributes": {
+      "lightning:type": "lightning__objectType",
+      "properties": {
+        "caseNumber": {
+          "title": "Case Number",
+          "description": "Public case identifier shown in the header.",
+          "lightning:type": "lightning__textType"
+        },
+        "subject": {
+          "title": "Subject",
+          "description": "Short description of the customer issue.",
+          "lightning:type": "lightning__textType"
+        },
+        "priority": {
+          "title": "Priority",
+          "description": "Case priority label such as High, Medium, or Low.",
+          "lightning:type": "lightning__textType"
+        },
+        "slaHoursLeft": {
+          "title": "SLA Hours Left",
+          "description": "Hours remaining against the active service-level target.",
+          "lightning:type": "lightning__numberType"
+        },
+        "slaAtRisk": {
+          "title": "SLA At Risk",
+          "description": "True when the case is at risk of missing its SLA.",
+          "lightning:type": "lightning__booleanType"
+        },
+        "customerName": {
+          "title": "Customer Name",
+          "description": "Display name of the customer on the case.",
+          "lightning:type": "lightning__textType"
+        },
+        "recommendedAction": {
+          "title": "Recommended Action",
+          "description": "The next step the agent should take.",
+          "lightning:type": "lightning__textType"
+        },
+        "ownerName": {
+          "title": "Owner Name",
+          "description": "Current case owner.",
+          "lightning:type": "lightning__textType"
+        }
+      }
+    }
+  }
+}

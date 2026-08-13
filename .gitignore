@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+.sf/
+.sfdx/
+.localdevserver/
+coverage/
+*.log
+.idea/
+.vscode/
+__pycache__/
+.python-version
