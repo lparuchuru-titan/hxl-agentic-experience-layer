@@ -272,9 +272,8 @@ window.addEventListener('DOMContentLoaded', function () {
 <div class="layout">
 <nav class="sticky-toc">
   <div class="toc-title">On this page</div>
-  <a href="#hxl">What HXL is</a>
-  <a href="#when">When Salesforce released it</a>
-  <a href="#meant">How it is meant to be used</a>
+  <a href="#playground">The playground, 15 April 2026</a>
+  <a href="#meant">How HXL is meant to be used</a>
   <a href="#learn">How we learned it</a>
   <a href="#sample">The Case Next Action sample</a>
   <a href="#trust">What stays in Salesforce</a>
@@ -282,40 +281,38 @@ window.addEventListener('DOMContentLoaded', function () {
 <main class="main">
   <header class="hero">
     <h1>Salesforce Headless Experience Layer</h1>
-    <p class="sub">Announced with Headless 360 at TrailblazerDX 2026. One interface description. Every host paints it. We learned the product by building a small sample — Case Next Action — and running it in Claude Desktop.</p>
-    <p class="byline">13 August 2026 · public sample · HXL as Salesforce released it</p>
+    <p class="sub">The HXL Playground has been public since TrailblazerDX 2026. That is where you actually learn the product — not another recap of Headless 360. We used it to build Case Next Action and run the card in Claude Desktop.</p>
+    <p class="byline">13 August 2026 · public sample · learned in the playground</p>
     <div class="hero-actions">
-      <a class="btn solid" href="#hxl">What HXL is</a>
-      <a class="btn" href="https://www.salesforce.com/headless/agentic-experience-layer/">Salesforce product page</a>
+      <a class="btn solid" href="#playground">The playground date</a>
+      <a class="btn" href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Open the HXL Playground</a>
     </div>
   </header>
 
-  <h2 id="hxl">What Headless Experience Layer is</h2>
-  <p class="story">For a long time, a Salesforce UI meant Lightning. If the same next action needed to show up in Slack, you rebuilt it in Block Kit. In ChatGPT or Claude, you hoped a paragraph would do. Three surfaces, three front ends, one tired team.</p>
-  <p class="story"><a href="https://www.salesforce.com/headless/agentic-experience-layer/">Headless Experience Layer</a> is Salesforce’s answer to that split. Headless does not mean “no UI.” It means the UI is not locked to the Salesforce browser. You describe a card, a decision tile, a rebooking flow — once — as a small JSON tree. Slack, mobile, Microsoft Teams, ChatGPT, Claude, Gemini, Agentforce, or any MCP host renders it with their own look. You do not ship a second stylesheet. You do not paste markdown and hope.</p>
-  <p>Salesforce places HXL inside <strong>Headless 360</strong>: the wider bet that every platform capability should be reachable as an API, an MCP tool, or a CLI command, so humans and agents work on the same governed logic. HXL is the <em>presentation</em> piece of that bet. The agent decides what to do. The Experience Layer decides how that decision appears on whichever surface the user is already in.</p>
+  <h2 id="playground">The playground opened 15 April 2026</h2>
+  <p class="story">You already know Headless 360. APIs, MCP, CLI, agents on the same governed platform. The piece that still needs a date on the calendar is the <strong>HXL Playground</strong>.</p>
+  <div class="callout ok">
+    <strong>Available since 15 April 2026</strong> — TrailblazerDX in San Francisco.
+    Salesforce showed the Experience Layer playground in the TDX keynote that day and put <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Explore the Playground</a> on the <a href="https://www.salesforce.com/headless/agentic-experience-layer/">Headless Experience Layer</a> product page. It is not a mock. It is a live Mosaic runtime. Every tutorial on that site is itself a widget. Expand the code view and you are reading the same JSON Slack, ChatGPT, Claude, or Agentforce will render.
+  </div>
+  <p>That is the on-ramp. Headless 360 told the industry what changed. The playground is where a builder sits down and finds out whether “define once, render anywhere” is real. We sat down there in August and built one card.</p>
   <div class="card">
-    <strong>Words the product uses. They are not interchangeable.</strong>
+    <strong>Words you will hit in the playground</strong>
     <table>
       <thead><tr><th>Word</th><th>In plain English</th></tr></thead>
       <tbody>
-        <tr><td>HXL</td><td>Headless Experience Layer. Describe the interface once. Let each host paint it.</td></tr>
+        <tr><td>HXL</td><td>Headless Experience Layer. The UI service inside Headless 360.</td></tr>
         <tr><td>Component</td><td>A primitive brick: <code>tile/text</code>, <code>tile/badge</code>, <code>tile/button</code>, <code>tile/card</code>.</td></tr>
         <tr><td>Widget</td><td>Those bricks composed into one useful page.</td></tr>
         <tr><td>Mosaic</td><td>The JSON. Data (model) + tiles (view) + later, actions (controller).</td></tr>
         <tr><td>Semantic variant</td><td>Intent, not hex. <code>primary</code>, <code>warning</code>, <code>elevated</code>.</td></tr>
-        <tr><td>MCP</td><td>Model Context Protocol. The plug a host like Claude uses to call a tool and, here, mount a UI.</td></tr>
+        <tr><td>MCP</td><td>The plug a host like Claude uses to call a tool and mount a UI.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h2 id="when">When Salesforce released it</h2>
-  <p>Salesforce announced <strong>Headless 360</strong> on <strong>15 April 2026</strong> at <strong>TrailblazerDX (TDX) 2026</strong> in San Francisco. The Headless Experience Layer — also shown in the keynote as the Agentforce Experience Layer — shipped as a generally available UI service in that launch, not a slideware mock.</p>
-  <p>The public way to touch it is <a href="https://axl-playground-tdx-f802f74fb389.herokuapp.com/">Explore the Playground</a> on the product page. Every tutorial on that site is itself a widget. Expand the code view and you are reading the same JSON a host will render. That is the runtime, not a marketing picture of a runtime.</p>
-  <div class="callout">If you are coming to this in August 2026, HXL is a few months old. The docs and the playground are the source of truth. This post is how one sample used them — not an official Salesforce guide.</div>
-
-  <h2 id="meant">How it is meant to be used</h2>
-  <p class="story">Salesforce’s own examples are things a queue or a traveler would actually click: a flight status card, a rebooking flow, an approval, a case escalation, a renewal alert. The pattern is the same every time.</p>
+  <h2 id="meant">How HXL is meant to be used</h2>
+  <p class="story">You do not open the playground to relearn Headless 360. You open it to describe a moment that is more than text — a flight status card, a rebooking flow, an approval, a case escalation — and watch every host preview paint the same JSON.</p>
   <div class="flow-board">
     <div class="mermaid">
 flowchart LR
