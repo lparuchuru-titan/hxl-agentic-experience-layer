@@ -2,7 +2,7 @@
   "mcpServers": {
     "hxl-case-next-action": {
       "command": "node",
-      "args": ["mcp/server.mjs"]
+      "args": ["/absolute/path/to/hxl-agentic-experience-layer/mcp/server.mjs"]
     }
   }
 }

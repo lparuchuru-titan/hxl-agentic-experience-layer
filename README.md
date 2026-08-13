@@ -1,188 +1,114 @@
 # Headless Experience Layer — Case Next Action
 
-This repo is a public sample of Salesforce [Headless Experience Layer (HXL)](https://www.salesforce.com/headless/agentic-experience-layer/).
+Public sample of Salesforce [Headless Experience Layer (HXL)](https://www.salesforce.com/headless/agentic-experience-layer/): one Mosaic JSON card, rendered in Claude Desktop via a local MCP tool.
 
-If those words are new, read this page as a tutorial. The [blog post](docs/blog/20260813-headless-experience-layer.html) starts from HXL beta (end of July 2026; org access early August; GA planned for Dreamforce) and how we learned it in the playground by building Case Next Action. This README is the file-by-file recipe.
+The [blog](docs/blog/20260813-headless-experience-layer.html) is the story. This README is how you run the sample on **your** machine.
 
-**In one sentence:** we described a case card once as Mosaic JSON, then let Claude Desktop render it by calling a local tool.
+**No API keys ship in this repo.** The card uses fictional Northwind data (`00001234`). Claude Desktop uses **your** signed-in account. A Salesforce org login is optional and stays on your laptop.
 
 ![Case Next Action card](docs/media/case-next-action.png)
 
-Sample data is fictional (Northwind Traders, case `00001234`). Nothing here is from a customer org.
+## Setup (short)
 
-## What you need to know first
+You need [Node.js](https://nodejs.org/) 18+ and [Claude Desktop](https://claude.ai/download) (the chat app, not Claude Code). Sign in to Desktop with your own Anthropic account. We do not provide a key.
 
-| Term | Meaning |
+```bash
+git clone https://github.com/lparuchuru-titan/hxl-agentic-experience-layer.git
+cd hxl-agentic-experience-layer
+cd mcp && npm install && cd ..
+node scripts/print-claude-config.mjs
+```
+
+The last command prints a `mcpServers` block with **your** absolute `node` path and **your** `mcp/server.mjs` path. Merge that block into Claude Desktop’s config (keep any other servers you already have):
+
+| OS | Config file |
 |---|---|
-| **HXL** | Salesforce product: describe a UI once; Slack, ChatGPT, Claude, Agentforce, or any MCP host paints it. |
-| **Playground** | Live editor at [Explore the Playground](https://www.headlessexperiencelayer.com/playground/). Tutorials on that site are themselves widgets. |
-| **Component** | A primitive: `tile/text`, `tile/badge`, `tile/button`, `tile/card`. |
-| **Widget** | Those primitives composed into one page (our card). |
-| **Mosaic** | The playground JSON (`type: mosaic`, bindings `{!$case.field}`). |
-| **WidgetBundle** | The org-shaped copy (`lightning__agentforceWidget`, bindings `{!$attrs.field}`, plus `schema.json`). |
-| **MCP** | [Model Context Protocol](https://modelcontextprotocol.io/). A local server Claude can start and call. |
-| **Claude Desktop** | The chat app. This demo is **not** Claude Code in the terminal. |
-| **stdio** | How Desktop talks to our server: it launches `node mcp/server.mjs` itself. No extra terminal. |
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
 
-You do not pick hex colors in HXL. You pick **semantic variants** (`primary`, `warning`, `elevated`). Each host maps those to its own look.
-
-## What is in this repo
-
-| Path | Role |
-|---|---|
-| `mosaics/case-next-action.json` | Playground Mosaic. Paste this into the playground. |
-| `mosaics/hello-world.json` | Smallest possible widget (`tile/text`). |
-| `force-app/main/default/uiWidgets/caseNextAction/` | WidgetBundle for a Salesforce org (optional for Claude). |
-| `mcp/server.mjs` | MCP server. Tool: `get_case_next_action`. |
-| `mcp/widgets/case-next-action.html` | HTML the host iframes after the tool runs. |
-| `preview/` | Local semantic preview (not a pixel-perfect host). |
-| `docs/blog/20260813-headless-experience-layer.html` | What HXL is, when it shipped, how we learned it. |
-| `scripts/validate-widget.py` | Checks the WidgetBundle against authoring rules. |
-
-## Step 1 — Develop the HXL component
-
-1. Open the [HXL Playground](https://www.headlessexperiencelayer.com/playground/).
-2. Start from a tutorial (each lesson is a widget) or a blank mosaic.
-3. Build a tree of tiles. Ours is: `tile/column` → `tile/card` → header row, subject, customer, optional SLA callout, recommended action, two buttons.
-4. Bind data with `{!$case.field}` and an inline `dataProviders` block. Example from `mosaics/case-next-action.json`:
-
-```json
-{
-  "definition": "tile/callout",
-  "meta": { "if": "{!$case.slaAtRisk}" },
-  "attributes": { "variant": "warning", "title": "SLA at risk" }
-}
-```
-
-When `slaAtRisk` is false, that callout is **not in the tree**. Do not hide it with CSS.
-
-5. Switch host previews (Slack / ChatGPT / Claude / Agentforce). If it only looks right on one surface, the variants are too specific.
-6. Save the JSON as `mosaics/case-next-action.json`.
-
-Local preview of the same idea (file:// may block `fetch`):
-
-```bash
-python3 -m http.server 8766
-# http://127.0.0.1:8766/preview/
-```
-
-## Step 2 — Keep a WidgetBundle (org shape)
-
-Claude does not need this. A Salesforce org does.
-
-Same tiles, different envelope:
-
-| Playground Mosaic | WidgetBundle |
-|---|---|
-| `type: mosaic` | `type: lightning__agentforceWidget` |
-| root `tile/mosaic` | root `tile/widget` |
-| `{!$case.field}` | `{!$attrs.field}` |
-| inline sample data | `schema.json` types the attributes |
-
-Three files in `force-app/main/default/uiWidgets/caseNextAction/`:
-
-- `caseNextAction.json` — the widget body
-- `schema.json` — attribute types (`lightning__textType`, `lightning__booleanType`, …)
-- `caseNextAction.uiwidget-meta.xml` — label, description, `widgetType` JSON
-
-Validate:
-
-```bash
-python3 scripts/validate-widget.py
-```
-
-This repo does **not** deploy the bundle to an org. Deploy only when you intend to.
-
-## Step 3 — Develop the MCP app
-
-Claude chat will not load Mosaic JSON by itself. It calls a **tool**. The MCP app is that tool plus a UI resource.
-
-```bash
-cd mcp
-npm install
-```
-
-What `mcp/server.mjs` does:
-
-1. Starts an MCP server named `hxl-case-next-action` over **stdio**.
-2. Registers resource `ui://widgets/case-next-action.html` (MIME `text/html;profile=mcp-app`).
-3. Registers tool `get_case_next_action`. The tool returns JSON. The host fetches the HTML and puts it in an iframe.
-4. Inlines `@modelcontextprotocol/ext-apps` into the widget HTML at serve time. A CDN import fails the sandbox and looks like a spinner forever.
-5. Advertises both `_meta.ui.resourceUri` and `_meta["ui/resourceUri"]` so the host can find the view.
-
-Widget HTML lives at `mcp/widgets/case-next-action.html`. The placeholder `/*__EXT_APPS_BUNDLE__*/` is replaced when the server starts.
-
-Do **not** put an HTTP proxy (`mcp-remote`) in front of this for Claude Desktop. Native stdio is what mounted the iframe. HTTP listed the tool and still showed a spinner.
-
-Optional local HTML preview (not the Claude path):
-
-```bash
-node mcp/server.mjs --http
-# http://127.0.0.1:8787/widget-preview
-```
-
-## Step 4 — Enable the MCP in Claude Desktop
-
-Use the **Claude Desktop chat app**, not Claude Code.
-
-1. `npm install` in `mcp/` (Step 3). Desktop will launch Node itself.
-2. Open `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS).
-3. Add a **stdio** server. Use a real absolute path to `server.mjs` and a Node binary Desktop can execute:
+Example shape (do not copy the paths — use the script output):
 
 ```json
 {
   "mcpServers": {
     "hxl-case-next-action": {
-      "command": "node",
+      "command": "/absolute/path/to/node",
       "args": ["/absolute/path/to/hxl-agentic-experience-layer/mcp/server.mjs"]
     }
   }
 }
 ```
 
-If `node` is not on Desktop’s PATH, set `command` to the full Node path (for example `~/.local/node/bin/node`).
+Then:
 
-4. **Quit Claude with ⌘Q.** Closing the window is not enough. Reopen the app.
-5. Open **Settings** (`⌘,`) → **Desktop app** → **Developer** → **Local MCP servers**.
-6. Confirm `hxl-case-next-action` has a blue **running** badge.
+1. **Fully quit Claude** (macOS: ⌘Q). Closing the window is not enough.
+2. Reopen Claude Desktop. **Settings** (`⌘,`) → **Desktop app** → **Developer** → **Local MCP servers**.
+3. Confirm `hxl-case-next-action` shows **running**.
+4. New chat, send: `Show me the Case Next Action card`
+5. Allow the tool if asked.
 
-![Enable the MCP in Claude Desktop Developer settings](docs/media/claude-enable-mcp-developer.png)
+A filled `.env` is **not** required. Copy `.env.example` only if you later add your own org credentials — never commit that file.
 
-If the list is empty: **Edit Config**, fix the JSON comma or the path, save, ⌘Q again. Logs: `~/Library/Logs/Claude/`.
+## Try the playground (no install)
 
-**Extensions** (same Settings group) is the product name for “let Claude talk to things on this machine.” **Developer** is where you confirm this local server is running.
+1. Open the [HXL Playground](https://www.headlessexperiencelayer.com/playground/).
+2. Paste `mosaics/case-next-action.json`.
+3. Switch Slack / ChatGPT / Claude / Agentforce previews.
 
-## Step 5 — Use it in Claude
+Local semantic preview:
 
-1. Start a **new chat**. Old threads can keep a dead iframe if a turn already failed.
-2. Send:
-
+```bash
+python3 -m http.server 8766
+# http://127.0.0.1:8766/preview/
 ```
-Show me the Case Next Action card
-```
 
-3. Allow the tool if Claude asks.
-4. You should see the white card (case number, High / SLA, amber callout, **Take next action**) — not a paragraph with a spinner underneath.
-5. Click **Take next action** to see the widget post back into the thread. Buttons in this sample send a chat message. They do not update Salesforce.
+## What you need to know
 
-The usage video lives in the [blog](docs/blog/20260813-headless-experience-layer.html#sample), not again on this page.
+| Term | Meaning |
+|---|---|
+| **HXL** | Describe a UI once; each host paints it. |
+| **Mosaic** | Playground JSON (`{!$case.field}`). |
+| **WidgetBundle** | Org copy (`{!$attrs.field}` + `schema.json`). Optional for Claude. |
+| **MCP** | Local tool Claude starts over **stdio**. |
+| **Claude Desktop** | Chat app. Not Claude Code. |
+
+## What is in this repo
+
+| Path | Role |
+|---|---|
+| `mosaics/case-next-action.json` | Playground Mosaic |
+| `force-app/main/default/uiWidgets/caseNextAction/` | WidgetBundle (org; do not deploy unless you intend to) |
+| `mcp/server.mjs` | MCP server — tool `get_case_next_action` |
+| `mcp/widgets/case-next-action.html` | HTML Claude iframes |
+| `mcp/claude-mcp.example.json` | Config shape only — no machine paths |
+| `scripts/print-claude-config.mjs` | Prints *your* Desktop config |
+| `docs/blog/` | Public post |
+
+## How the sample is built
+
+1. **HXL mosaic** — tiles + `{!$case.field}` + `meta.if` for the SLA callout. When `slaAtRisk` is false the callout is not in the tree.
+2. **WidgetBundle** — same tiles, `{!$attrs.*}`, `schema.json`. Validate with `python3 scripts/validate-widget.py`.
+3. **MCP app** — `npm install` in `mcp/`. Server speaks stdio, inlines `@modelcontextprotocol/ext-apps`, advertises `ui://widgets/case-next-action.html`. Do not put `mcp-remote` / HTTP in front of Desktop.
+4. **Enable in Desktop** — Setup above. Screenshot of the Developer page: `docs/media/claude-enable-mcp-developer.png`.
+5. **Use it** — `Show me the Case Next Action card`. Buttons send a chat message; they do not write to Salesforce.
 
 ## If you only see a spinner
 
 | Cause | Fix |
 |---|---|
-| Widget HTML never completed the MCP Apps handshake | Keep the inlined `ext-apps` bundle. Do not load it from a CDN. |
-| HTTP + `mcp-remote` | Use native stdio as in Step 4. |
-| Stale chat | ⌘Q, new chat, ask again. The host caches widget HTML. |
-| Server not running | Settings → Developer. Badge must say **running**. |
+| Handshake bundle missing | Keep the inlined `ext-apps` in `server.mjs`. No CDN. |
+| HTTP + `mcp-remote` | Native stdio only. |
+| Stale chat | Quit fully, new chat. |
+| Server not running | Developer page must say **running**. Wrong path or `node` not found. |
 
-## What this repo does not do
+## Secrets and org access
 
-- No org deploy.
-- No company CRM data.
-- No pixel styling. Hosts own the look.
-- Buttons are presentational toward Salesforce. Hosts must wire a real write if they want one.
+- This repo has **no** Salesforce Connected App, Anthropic key, or customer data.
+- Claude: use your own Desktop login. Never paste a session token into git.
+- Live Case data later: `sf org login web` on your machine, or put Connected App values in a local `.env` from `.env.example`. `.sfdx/`, `.env`, and `credentials.json` are gitignored.
+- Do not deploy the WidgetBundle to an org unless you mean to, and only to **your** org.
 
 ## License
 
-MIT. Product names belong to Salesforce, Inc. and Anthropic. This is an independent sample, not an official Salesforce or Anthropic repository.
+MIT. Product names belong to Salesforce, Inc. and Anthropic. Independent sample, not an official Salesforce or Anthropic repository.

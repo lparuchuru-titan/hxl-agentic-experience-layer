@@ -13,3 +13,7 @@ coverage/
 .vscode/
 __pycache__/
 .python-version
+mcp/claude-mcp.local.json
+auth.json
+credentials.json
+*.pem
